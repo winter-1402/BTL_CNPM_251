@@ -213,7 +213,7 @@ export function Library({ user }: LibraryProps) {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="bg-gradient-to-r from-[#030391] to-[#1488D8] text-white rounded-lg p-6">
+      <div className="bg-gradient-to-r from-[#138FE0] to-[#0A4E7A] text-white rounded-lg p-6">
         <h2 className="text-2xl mb-2">Thư Viện Tài Liệu</h2>
         <p className="text-white-100">
           Truy cập tài liệu học tập, bài giảng và nguồn tài nguyên học tập
