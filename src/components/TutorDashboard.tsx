@@ -365,8 +365,11 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                     </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle className="text-center font-bold">Bạn chắc chắn với lựa chọn của mình</DialogTitle>
+                      <DialogTitle className="font-bold">Chấp nhận yêu cầu</DialogTitle>
                     </DialogHeader>
+                    <DialogDescription className=" text-sm text-gray-600">
+                      Hành động này sẽ thêm học viên vào danh sách của bạn và lên lịch buổi học đầu tiên.
+                    </DialogDescription>
                     <div className="flex gap-2 mt-4">
                        <DialogClose asChild>
                   <Button className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90" size="sm"
@@ -396,8 +399,11 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                     </DialogTrigger>
                  <DialogContent>
                     <DialogHeader>
-                      <DialogTitle className="text-center font-bold">Bạn chắc chắn với lựa chọn của mình</DialogTitle>
+                      <DialogTitle className="font-bold"> Từ chối yêu cầu </DialogTitle>
                     </DialogHeader>
+                    <DialogDescription className=" text-sm text-gray-600">
+                      Bạn chắc chắn muốn từ chối yêu cầu này . Việc thực hiện hành động này sẽ không thể hoàn tác.
+                    </DialogDescription>
                     <div className="flex gap-2 mt-4">
                   <Button className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90" size="sm"
                   onClick={() => {
