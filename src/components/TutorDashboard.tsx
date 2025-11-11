@@ -52,15 +52,6 @@ type pendingRequest = {
     timeRequested: string;
     requestDate: string;
 };
-function getStudentOptions(recentStudents1: recentStudents[], upcomingSessions: upcomingSession[]) 
-{
-    return Array.from(
-      new Set([
-        ...recentStudents1.map((s) => s.name),
-        ...upcomingSessions.map((s) => s.student),
-      ])
-    ).sort();
-}
 function removePendingRequestById(pendingRequests: pendingRequest[], id: number) 
 {
   return pendingRequests.filter((r) => r.id !== id);
