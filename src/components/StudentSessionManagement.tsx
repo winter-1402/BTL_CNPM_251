@@ -22,8 +22,7 @@ type SessionManagementProps = {
   user: User;
 };
 
-export function SessionManagement({ user }: SessionManagementProps) {
-  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+export function StudentSessionManagement({ user }: SessionManagementProps) {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
 
@@ -38,7 +37,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       type: 'online',
       status: 'scheduled',
       date: '2025-10-27',
-      time: '14:00',
+      time: '14:00 - 15:30',
       duration: 90,
       meetingLink: 'https://meet.google.com/abc-defg-hij',
       notes: 'Please review sorting algorithms before the session',
@@ -53,7 +52,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       type: 'in-person',
       status: 'scheduled',
       date: '2025-10-28',
-      time: '10:00',
+      time: '10:00 - 11:00',
       duration: 60,
       location: 'Building A1, Room 302',
       notes: 'Bring your laptop with MySQL installed',
@@ -68,7 +67,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       type: 'online',
       status: 'completed',
       date: '2025-10-20',
-      time: '15:00',
+      time: '15:00 - 16:30',
       duration: 90,
       meetingLink: 'https://meet.google.com/xyz-abcd-efg',
       rating: 5,
@@ -84,7 +83,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       type: 'online',
       status: 'completed',
       date: '2025-10-15',
-      time: '14:00',
+      time: '14:00 - 15:00',
       duration: 60,
       rating: 5,
     },
@@ -98,7 +97,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       type: 'in-person',
       status: 'cancelled',
       date: '2025-10-18',
-      time: '16:00',
+      time: '16:00 - 17:30',
       duration: 90,
       location: 'Building B4, Room 201',
     },
@@ -107,11 +106,13 @@ export function SessionManagement({ user }: SessionManagementProps) {
   const upcomingSessions = sessions.filter((s) => s.status === 'scheduled');
   const completedSessions = sessions.filter((s) => s.status === 'completed');
   const cancelledSessions = sessions.filter((s) => s.status === 'cancelled');
+   
+  const [upcomingSession, setUpcomingSessions] = useState<Session[]>(upcomingSessions);
+
 
   const handleCancelSession = (session: Session) => {
-    toast.success('Đã hủy buổi học', {
-      description: `Buổi học với ${session.tutorName} đã được hủy.`,
-    });
+    toast.success(`Đã hủy buổi học với ${session.tutorName} vào ngày ${new Date(session.date).toLocaleDateString('vi-VN')}`, 
+    );
   };
 
   const handleSubmitFeedback = () => {
@@ -134,7 +135,6 @@ export function SessionManagement({ user }: SessionManagementProps) {
       completed: 'Hoàn Thành',
       cancelled: 'Đã Hủy',
     };
-
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-6">
@@ -160,7 +160,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>{session.time} ({session.duration} phút)</span>
+              <span>{session.time}</span>
             </div>
             {session.type === 'online' ? (
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -178,7 +178,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
           {session.notes && (
             <div className="bg-gray-50 rounded p-3 mb-4">
               <p className="text-sm text-gray-600">
-                <span className="text-gray-900">Ghi chú:</span> {session.notes}
+                <span className="text-gr50-900">Ghi chú:</span> {session.notes}
               </p>
             </div>
           )}
@@ -222,16 +222,20 @@ export function SessionManagement({ user }: SessionManagementProps) {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Hủy Buổi Học</DialogTitle>
-                      <DialogDescription>
+                      <DialogTitle className="text-center font-semibold"> Xác nhận hủy buổi học này</DialogTitle>
+                      <DialogDescription className="text-center font-semibold">
                         Bạn có chắc chắn muốn hủy buổi học với {session.tutorName}?
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                      <Button variant="outline">Giữ Buổi Học</Button>
+                      <Button variant="outline" className="flex-1">Giữ Buổi Học</Button>
                       <Button
                         variant="destructive"
-                        onClick={() => handleCancelSession(session)}
+                        onClick={() => {
+                            handleCancelSession(session);
+                            setUpcomingSessions((prev) => prev.filter((s) => s.id !== session.id));
+                        }}
+                        className="flex-1"
                       >
                         Hủy Buổi Học
                       </Button>
@@ -260,7 +264,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
                       <Label>Điểm Đánh Giá</Label>
                       <div className="flex gap-2 mt-2">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <button
+                          <Button
                             key={star}
                             onClick={() => setRating(star)}
                             className="focus:outline-none"
@@ -272,7 +276,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
                                   : 'text-gray-300'
                               }`}
                             />
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     </div>
@@ -304,8 +308,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
         </CardContent>
       </Card>
     );
-  };
-
+}
   return (
     <div className="p-6 space-y-6">
       <div>
@@ -318,7 +321,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       <Tabs defaultValue="upcoming" className="space-y-6">
         <TabsList>
           <TabsTrigger value="upcoming">
-            Sắp Tới ({upcomingSessions.length})
+            Sắp Tới ({upcomingSession.length})
           </TabsTrigger>
           <TabsTrigger value="completed">
             Hoàn Thành ({completedSessions.length})
@@ -329,19 +332,16 @@ export function SessionManagement({ user }: SessionManagementProps) {
         </TabsList>
 
         <TabsContent value="upcoming" className="space-y-4">
-          {upcomingSessions.length === 0 ? (
+          {upcomingSession.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500">Không có buổi học sắp tới</p>
-                <Button className="mt-4 bg-[#1488D8] hover:bg-[#1488D8]/90">
-                  Đặt Buổi Học
-                </Button>
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {upcomingSessions.map((session) => (
+              {upcomingSession.map((session) => (
                 <SessionCard key={session.id} session={session} />
               ))}
             </div>
