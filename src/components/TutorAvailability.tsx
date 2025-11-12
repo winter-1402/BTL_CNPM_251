@@ -579,9 +579,9 @@ function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: 
   };
 
   const statusLabels = {
-    upcoming: 'Sắp tới',
-    completed: 'Đã hoàn thành',
-    cancelled: 'Đã hủy',
+    upcoming: 'sắp tới',
+    completed: 'đã hoàn thành',
+    cancelled: 'đã hủy',
   };
 
   return (

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { TutorDirectory } from './components/TutorDirectory';
-import { TutorSessionManagement } from './components/TutorSessionManagement';
-import { StudentSessionManagement } from './components/StudentSessionManagement';
+import { SessionManagement } from './components/SessionManagement';
 import { TutorAvailability } from './components/TutorAvailability';
 import { Library } from './components/Library';
 import { Feedback } from './components/Feedback';
@@ -129,11 +128,7 @@ function App() {
       case 'tutors':
         return <TutorDirectory user={currentUser} />;
       case 'sessions':
-        if (currentUser.role === 'tutor') {
-          return <TutorSessionManagement user={currentUser} />;
-        } else {
-          return <StudentSessionManagement user={currentUser} />;
-        }
+        return <SessionManagement user={currentUser} />;
       case 'feedback':
         return <Feedback user={currentUser} />;
       case 'availability':
