@@ -513,15 +513,23 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarFallback className="bg-[#1488D8] text-white">
-                        {student.name.split(' ').map((n) => n[0]).join('')}
+                        {student.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h4 className="text-gray-900">{student.name}</h4>
-                      <p className="text-sm text-gray-500">{student.sessions} buổi học • Lần cuối: {student.lastSession}</p>
+                      <p className="text-sm text-gray-500">
+                        {student.sessions} buổi học • Lần cuối:{" "}
+                        {student.lastSession}
+                      </p>
                     </div>
                   </div>
-                  <span className="text-sm text-gray-600">{student.progress}%</span>
+                  <span className="text-sm text-gray-600">
+                    {student.progress}%
+                  </span>
                 </div>
                 <Progress value={student.progress} className="h-2" />
               </div>

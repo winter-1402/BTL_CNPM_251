@@ -125,12 +125,12 @@ type Document = {
       tags: ["Practice", "Solutions Included"],
     },
     {
-      id: '6',
-      title: 'Software Design Principles',
-      subject: 'Software Engineering',
-      type: 'doc',
-      author: 'MSc. Pham Thi Lan',
-      uploadDate: '2025-10-12',
+      id: "6",
+      title: "Software Design Principles",
+      subject: "Software Engineering",
+      type: "pdf",
+      author: "MSc. Pham Thi Lan",
+      uploadDate: "2025-10-12",
       downloads: 267,
       rating: 4.8,
       description:
@@ -178,24 +178,24 @@ export function Library({ user }: LibraryProps) {
     const matchesSearch =
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.subject.toLowerCase().includes(searchQuery.toLowerCase()); // Thêm tìm kiếm theo môn học
-    const matchesSubject = selectedSubject === 'all' || doc.subject === selectedSubject;
-    const matchesType = selectedType === 'all' || doc.type === selectedType;
+      doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSubject =
+      selectedSubject === "all" || doc.subject === selectedSubject;
+    const matchesType = selectedType === "all" || doc.type === selectedType;
     return matchesSearch && matchesSubject && matchesType;
   });
 
   // ... (getFileIcon, handleDownload giữ nguyên)
   const getFileIcon = (type: string) => {
     switch (type) {
-      case 'pdf':
-        return <FileText className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
-      case 'doc':
-        return <File className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
-      case 'video':
-        return <Video className="w-8 h-8 text-black fill-black" fill="black" stroke="black" />;
-      case 'archive':
-        return <FileArchive className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
+      case "pdf":
+        return <FileText className="h-8 w-8 text-red-500" />;
+      case "doc":
+        return <File className="h-8 w-8 text-blue-500" />;
+      case "video":
+        return <Video className="h-8 w-8 text-purple-500" />;
+      case "archive":
+        return <FileArchive className="h-8 w-8 text-orange-500" />;
       default:
         return <File className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
     }
@@ -301,20 +301,19 @@ export function Library({ user }: LibraryProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {recentlyViewed.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {recentlyViewed.map((doc) => (
-                <div
-                  key={doc.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:border-[#1488D8] transition-colors cursor-pointer"
-                  onClick={() => handleView(doc)}
-                >
-                  <div className="flex items-start gap-3">
-                    {getFileIcon(doc.type)}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm text-gray-900 truncate">{doc.title}</h4>
-                      <p className="text-xs text-gray-500 mt-1">{doc.author}</p>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {recentlyViewed.map((doc) => (
+              <div
+                key={doc.id}
+                className="border border-gray-200 rounded-lg p-4 hover:border-[#1488D8] transition-colors cursor-pointer"
+              >
+                <div className="flex items-start gap-3">
+                  {getFileIcon(doc.type)}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm text-gray-900 truncate">
+                      {doc.title}
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-1">{doc.author}</p>
                   </div>
                 </div>
               ))}
@@ -421,7 +420,7 @@ export function Library({ user }: LibraryProps) {
             ))}
           </div>
         </TabsContent>
-  </Tabs>
+      </Tabs>
     </div>
   );
 }

@@ -29,6 +29,25 @@
             "@radix-ui/react-toggle": "^1.1.2",
             "@radix-ui/react-toggle-group": "^1.1.2",
             "@radix-ui/react-tooltip": "^1.1.8",
+<<<<<<< HEAD
+            "bcrypt": "^6.0.0",
+            "class-variance-authority": "^0.7.1",
+            "clsx": "*",
+            "cmdk": "^1.1.1",
+            "cors": "^2.8.5",
+            "dotenv": "^17.2.3",
+            "embla-carousel-react": "^8.6.0",
+            "express": "^5.1.0",
+            "input-otp": "^1.4.2",
+            "jsonwebtoken": "^9.0.2",
+            "lucide-react": "^0.487.0",
+            "mysql2": "^3.15.3",
+            "next-themes": "^0.4.6",
+            "nodemailer": "^7.0.11",
+            "nodemon": "^3.1.11",
+            "pdfkit": "^0.17.2",
+            "pg": "^8.16.3",
+=======
             "class-variance-authority": "^0.7.1",
             "clsx": "*",
             "cmdk": "^1.1.1",
@@ -36,6 +55,7 @@
             "input-otp": "^1.4.2",
             "lucide-react": "^0.553.0",
             "next-themes": "^0.4.6",
+>>>>>>> cb861206bff21b51a1d58d3c10cfa99a3d330f01
             "react": "^18.3.1",
             "react-day-picker": "^8.10.1",
             "react-dom": "^18.3.1",
@@ -48,7 +68,10 @@
       },
       "devDependencies": {
             "@types/node": "^20.10.0",
+<<<<<<< HEAD
+=======
             "@types/react": "^19.2.2",
+>>>>>>> cb861206bff21b51a1d58d3c10cfa99a3d330f01
             "@vitejs/plugin-react-swc": "^3.10.2",
             "vite": "6.3.5"
       },
