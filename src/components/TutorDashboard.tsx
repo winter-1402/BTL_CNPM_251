@@ -104,33 +104,33 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
   const upcomingSessions: upcomingSession[] = [
     {
       id: 1,
-      student: 'Nguyễn Văn An',
-      studentId: '1810123',
-      subject: 'Cấu Trúc Dữ Liệu & Thuật Toán',
-      date: '27 Thg 10, 2025',
-      time: '14:00 - 15:30',
-      type: 'Trực tuyến',
-      notes: 'Sinh viên muốn ôn lại thuật toán sắp xếp',
+      student: "Nguyễn Văn An",
+      studentId: "1810123",
+      subject: "Cấu Trúc Dữ Liệu & Thuật Toán",
+      date: "27 Thg 10, 2025",
+      time: "14:00 - 15:30",
+      type: "Trực tuyến",
+      notes: "Sinh viên muốn ôn lại thuật toán sắp xếp",
     },
     {
       id: 2,
-      student: 'Lê Thị Mai',
-      studentId: '1810456',
-      subject: 'Thuật Toán',
-      date: '28 Thg 10, 2025',
-      time: '10:00 - 11:00',
-      type: 'Trực tiếp',
-      notes: 'Buổi học đầu tiên - giới thiệu',
+      student: "Lê Thị Mai",
+      studentId: "1810456",
+      subject: "Thuật Toán",
+      date: "28 Thg 10, 2025",
+      time: "10:00 - 11:00",
+      type: "Trực tiếp",
+      notes: "Buổi học đầu tiên - giới thiệu",
     },
     {
       id: 3,
-      student: 'Trần Văn Đức',
-      studentId: '1810789',
-      subject: 'Cấu Trúc Dữ Liệu',
-      date: '29 Thg 10, 2025',
-      time: '15:00 - 16:30',
-      type: 'Trực tuyến',
-      notes: 'Cấu trúc dữ liệu cây',
+      student: "Trần Văn Đức",
+      studentId: "1810789",
+      subject: "Cấu Trúc Dữ Liệu",
+      date: "29 Thg 10, 2025",
+      time: "15:00 - 16:30",
+      type: "Trực tuyến",
+      notes: "Cấu trúc dữ liệu cây",
     },
     { 
       id: 4,
@@ -232,14 +232,20 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h4 className="text-gray-900">{session.student}</h4>
-                    <p className="text-sm text-gray-500">MSSV: {session.studentId}</p>
-                    <p className="text-sm text-gray-600 mt-1">{session.subject}</p>
+                    <p className="text-sm text-gray-500">
+                      MSSV: {session.studentId}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {session.subject}
+                    </p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded ${
-                    session.type === 'Trực tuyến' 
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-blue-100 text-blue-700'
-                  }`}>
+                  <span
+                    className={`text-xs px-2 py-1 rounded ${
+                      session.type === "Trực tuyến"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}
+                  >
                     {session.type}
                   </span>
                 </div>
@@ -355,12 +361,17 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarFallback className="bg-[#1488D8] text-white text-sm">
-                        {request.student.split(' ').map((n) => n[0]).join('')}
+                        {request.student
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h4 className="text-gray-900">{request.student}</h4>
-                      <p className="text-sm text-gray-500">MSSV: {request.studentId}</p>
+                      <p className="text-sm text-gray-500">
+                        MSSV: {request.studentId}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -463,15 +474,23 @@ export function TutorDashboard({ user }: TutorDashboardProps) {
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarFallback className="bg-[#1488D8] text-white">
-                        {student.name.split(' ').map((n) => n[0]).join('')}
+                        {student.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h4 className="text-gray-900">{student.name}</h4>
-                      <p className="text-sm text-gray-500">{student.sessions} buổi học • Lần cuối: {student.lastSession}</p>
+                      <p className="text-sm text-gray-500">
+                        {student.sessions} buổi học • Lần cuối:{" "}
+                        {student.lastSession}
+                      </p>
                     </div>
                   </div>
-                  <span className="text-sm text-gray-600">{student.progress}%</span>
+                  <span className="text-sm text-gray-600">
+                    {student.progress}%
+                  </span>
                 </div>
                 <Progress value={student.progress} className="h-2" />
               </div>
