@@ -101,15 +101,6 @@ export function AdminManagement({ user }: AdminManagementProps) {
       status: "active",
       joinDate: "2021-03-20",
     },
-    {
-      id: 'A001',
-      name: 'Trương Đình Khải',
-      email: 'khai.truong@hcmut.edu.vn',
-      role: 'admin',
-      faculty: 'Phòng Đào tạo',
-      status: 'active',
-      joinDate: '2019-10-01',
-    },
   ]);
 
   const filteredUsers = users.filter((u) => {
@@ -138,19 +129,6 @@ export function AdminManagement({ user }: AdminManagementProps) {
   };
 
   const handleEditUser = (userId: string, updates: Partial<SystemUser>) => {
-    const user = users.find(u => u.id === userId);
-    
-    // Giả lập kiểm tra ràng buộc khi thay đổi vai trò (Mô phỏng Sequence Diagram)
-    if (updates.role && user && updates.role !== user.role) {
-        // Giả lập lỗi vi phạm ràng buộc (Ví dụ: không thể hạ cấp admin chính)
-        if (user.id === 'A001' && updates.role !== 'admin') {
-             toast.error('Vi phạm Ràng buộc Phân quyền', {
-                description: 'Không thể hạ cấp Quản trị viên cao nhất.',
-             });
-             return;
-        }
-    }
-    
     setUsers(users.map((u) => (u.id === userId ? { ...u, ...updates } : u)));
     toast.success("Cập nhật thông tin thành công");
   };
@@ -202,10 +180,10 @@ export function AdminManagement({ user }: AdminManagementProps) {
             Quản lý người dùng, phân quyền và đồng bộ dữ liệu
           </p>
         </div>
-        
         <Button
           onClick={handleSyncData}
-          className="flex items-center gap-2 bg-[#1488D8] hover:bg-[#1488D8]/90 text-white" 
+          variant="outline"
+          className="flex items-center gap-2"
         >
           <RefreshCw className="h-4 w-4" />
           Đồng bộ dữ liệu
@@ -224,14 +202,14 @@ export function AdminManagement({ user }: AdminManagementProps) {
         ))}
       </div>
 
-      <Tabs defaultValue="account-permission" className="space-y-6">
+      <Tabs defaultValue="users" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="account-permission">Quản lý Tài khoản & Phân quyền</TabsTrigger>
-          <TabsTrigger value="reports">Báo cáo Tổng hợp</TabsTrigger>
-          <TabsTrigger value="config">Cấu hình Hệ thống</TabsTrigger>
+          <TabsTrigger value="users">Quản lý Người dùng</TabsTrigger>
+          <TabsTrigger value="notifications">Gửi Thông báo</TabsTrigger>
+          <TabsTrigger value="permissions">Phân Quyền</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="account-permission" className="space-y-4">
+        <TabsContent value="users" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -259,33 +237,33 @@ export function AdminManagement({ user }: AdminManagementProps) {
                     <SelectItem value="all">Tất cả vai trò</SelectItem>
                     <SelectItem value="student">Sinh viên</SelectItem>
                     <SelectItem value="tutor">Gia sư</SelectItem>
+                    <SelectItem value="coordinator">Điều phối viên</SelectItem>
                     <SelectItem value="admin">Quản trị viên</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Users List */}
+              {/* Users Table */}
               <div className="space-y-3">
                 {filteredUsers.map((u) => (
                   <UserCard
                     key={u.id}
                     user={u}
-                    onEdit={handleEditUser} 
+                    onEdit={handleEditUser}
                     onDelete={handleDeleteUser}
-                    showRoleSelect={true}
                   />
                 ))}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
-        
-        <TabsContent value="reports">
-          <ReportsPanel users={users} />
+
+        <TabsContent value="notifications">
+          <NotificationPanel users={users} />
         </TabsContent>
-        
-        <TabsContent value="config">
-          <SystemConfigPanel />
+
+        <TabsContent value="permissions">
+          <PermissionsPanel users={users} onUpdate={handleEditUser} />
         </TabsContent>
       </Tabs>
     </div>
@@ -303,198 +281,6 @@ function AddUserDialog({
     email: "",
     role: "student" as "student" | "tutor" | "coordinator" | "admin",
     faculty: "",
-// Đại diện cho "Quản lý tham số hệ thống/Backup" & "Thực hiện khôi phục"
-function SystemConfigPanel() {
-  const handleBackup = () => {
-    toast.info('Đang tạo bản sao lưu hệ thống...');
-    setTimeout(() => {
-      toast.success('Sao lưu thành công', { description: 'Tạo bản sao lưu cơ sở dữ liệu và tệp thành công.' });
-    }, 1500);
-  };
-
-  const handleRestore = () => {
-    toast.warning('Đang thực hiện khôi phục dữ liệu...', {
-        description: 'Thao tác này sẽ ghi đè dữ liệu hiện tại.',
-        duration: 3000
-    });
-    setTimeout(() => {
-      toast.success('Khôi phục thành công', { description: 'Hệ thống đã được khôi phục về trạng thái trước đó.' });
-    }, 2500);
-  };
-    
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5 text-[#1488D8]" />
-          Cấu hình Hệ thống & Backup
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-2">
-            <h4 className="text-lg font-semibold">Tham số Hệ thống</h4>
-            <p className="text-gray-500">Quản lý các tham số cấu hình chung của hệ thống (Ví dụ: Thời gian hết hạn phiên, giới hạn tệp tải lên).</p>
-            <Button variant="outline">Chỉnh sửa Tham số</Button>
-        </div>
-
-        <div className="space-y-2 border-t pt-4">
-            <h4 className="text-lg font-semibold">Quản lý Backup & Khôi phục</h4>
-            <p className="text-gray-500">Quản lý các bản sao lưu cơ sở dữ liệu và tệp.</p>
-            <div className="flex gap-4">
-                <Button onClick={handleBackup} className="bg-green-600 hover:bg-green-700">
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Thực hiện Backup
-                </Button>
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button variant="outline" className="text-red-600 border-red-300 hover:bg-red-50">
-                            Khôi phục Dữ liệu
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle className="text-red-600">Xác nhận Khôi phục</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Thao tác này sẽ khôi phục hệ thống về bản sao lưu gần nhất. Dữ liệu hiện tại có thể bị mất. Bạn có chắc chắn muốn tiếp tục?
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Hủy</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleRestore} className="bg-red-600 hover:bg-red-700">
-                                Xác nhận Khôi phục
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Đại diện cho "Quản lý báo cáo tổng hợp" & "Tạo báo cáo tổng hợp" 
-function ReportsPanel({ users }: { users: SystemUser[] }) {
-  // Lấy danh sách Tutor và Admin
-  const reportingUsers = users.filter(u => u.role === 'tutor' || u.role === 'admin');
-
-  // Dữ liệu báo cáo giả lập (Báo cáo của từng Tutor/Admin)
-  const [reports, setReports] = useState(
-    reportingUsers.map((u, index) => ({
-      id: `${u.id}-rpt-${index + 1}`,
-      reporterName: u.name,
-      reporterRole: u.role,
-      date: new Date(new Date().setDate(new Date().getDate() - index)).toLocaleDateString('vi-VN'),
-      status: index % 3 === 0 ? 'Đã gửi' : 'Đang chờ',
-    }))
-  );
-  
-  const [selectedReports, setSelectedReports] = useState<string[]>([]);
-
-  const handleToggleReport = (reportId: string) => {
-    setSelectedReports(prev => 
-        prev.includes(reportId) 
-        ? prev.filter(id => id !== reportId)
-        : [...prev, reportId]
-    );
-  };
-    
-  const handleCompileAndSend = () => {
-    if (selectedReports.length === 0) {
-      toast.error('Vui lòng chọn ít nhất một báo cáo để tổng hợp.');
-      return;
-    }
-    
-    // LƯU TRỮ giá trị selectedReports hiện tại trước khi xóa state
-    const reportsToCompile = selectedReports;
-    
-    toast.info('Đang tổng hợp báo cáo và chuẩn bị gửi đi...', {
-        description: `Tổng hợp ${reportsToCompile.length} báo cáo con.`,
-        duration: 3000
-    });
-    
-    // Xóa ngay danh sách báo cáo đã chọn trên giao diện
-    setSelectedReports([]); 
-
-    setTimeout(() => {
-      // Cập nhật trạng thái các báo cáo con đã chọn thành 'Đã gửi'
-      setReports(prev => prev.map(r => reportsToCompile.includes(r.id) ? { ...r, status: 'Đã gửi' } : r));
-      
-      // SỬ DỤNG biến đã lưu (reportsToCompile)
-      toast.success('Gửi Báo cáo Tổng hợp thành công', { 
-          description: `Admin đã tổng hợp và gửi đi báo cáo gồm ${reportsToCompile.length} tài liệu.`
-      });
-    }, 2500);
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileSearch className="h-5 w-5 text-[#1488D8]" />
-          Quản lý Báo cáo Tutor & Admin
-        </CardTitle>
-        <p className="text-sm text-gray-500">Chọn các báo cáo con để tổng hợp và gửi báo cáo cuối cùng.</p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        
-        {/* THANH TÁC VỤ TỔNG HỢP */}
-        <div className="flex justify-between items-center p-3 border rounded-lg bg-gray-50">
-            <span className="text-sm text-gray-700">
-                Đã chọn: **{selectedReports.length}** báo cáo con
-            </span>
-            <Button 
-                onClick={handleCompileAndSend} 
-                disabled={selectedReports.length === 0}
-                className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
-            >
-                <Bell className="h-4 w-4 mr-2" />
-                Tổng hợp & Gửi đi
-            </Button>
-        </div>
-
-        {/* DANH SÁCH BÁO CÁO CON */}
-        <div className="space-y-3 max-h-96 overflow-y-auto">
-          {reports.map((r) => (
-            <div
-              key={r.id}
-              className={`flex items-center justify-between p-4 border rounded-lg transition-colors cursor-pointer ${
-                selectedReports.includes(r.id) ? 'border-[#1488D8] bg-blue-50' : 'hover:border-gray-400'
-              }`}
-              onClick={() => handleToggleReport(r.id)}
-            >
-              <div className="flex items-center gap-3">
-                <Input 
-                    type="checkbox" 
-                    checked={selectedReports.includes(r.id)} 
-                    readOnly
-                    className="w-4 h-4 text-[#1488D8] focus:ring-[#1488D8]"
-                />
-                <div>
-                  <p className="text-gray-900 font-medium">Báo cáo: {r.reporterName} ({r.reporterRole})</p>
-                  <p className="text-sm text-gray-500">Ngày tạo: {r.date}</p>
-                </div>
-              </div>
-              <Badge variant={r.status === 'Đã gửi' ? 'default' : 'secondary'} className={r.status === 'Đã gửi' ? 'bg-green-500 hover:bg-green-600' : ''}>
-                {r.status}
-              </Badge>
-            </div>
-          ))}
-        </div>
-        
-      </CardContent>
-    </Card>
-  );
-}
-
-
-function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }) {
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    role: 'student' as 'student' | 'tutor' | 'admin',
-    faculty: '',
   });
 
   const handleSubmit = () => {
@@ -562,6 +348,7 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
               <SelectContent>
                 <SelectItem value="student">Sinh viên</SelectItem>
                 <SelectItem value="tutor">Gia sư</SelectItem>
+                <SelectItem value="coordinator">Điều phối viên</SelectItem>
                 <SelectItem value="admin">Quản trị viên</SelectItem>
               </SelectContent>
             </Select>
@@ -599,12 +386,10 @@ function UserCard({
   user,
   onEdit,
   onDelete,
-  showRoleSelect,
 }: {
   user: SystemUser;
   onEdit: (id: string, updates: Partial<SystemUser>) => void;
   onDelete: (id: string) => void;
-  showRoleSelect: boolean;
 }) {
   const [editOpen, setEditOpen] = useState(false);
   const [editData, setEditData] = useState(user);
@@ -621,24 +406,11 @@ function UserCard({
     tutor: "bg-purple-100 text-purple-700",
     coordinator: "bg-green-100 text-green-700",
     admin: "bg-red-100 text-red-700",
-    student: 'Sinh viên',
-    tutor: 'Gia sư',
-    admin: 'Quản trị viên',
-  };
-
-  const roleColors = {
-    student: 'bg-blue-100 text-blue-700',
-    tutor: 'bg-purple-100 text-purple-700',
-    admin: 'bg-red-100 text-red-700',
   };
 
   const handleEdit = () => {
     onEdit(user.id, editData);
     setEditOpen(false);
-  };
-  
-  const handleRoleChange = (newRole: SystemUser['role']) => {
-    onEdit(user.id, { role: newRole });
   };
 
   return (
@@ -675,23 +447,6 @@ function UserCard({
       </div>
 
       <div className="flex items-center gap-2">
-        
-        {showRoleSelect && (
-             <Select
-                value={user.role}
-                onValueChange={handleRoleChange}
-             >
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="student">Sinh viên</SelectItem>
-                    <SelectItem value="tutor">Gia sư</SelectItem>
-                    <SelectItem value="admin">Quản trị viên</SelectItem>
-                </SelectContent>
-             </Select>
-        )}
-        
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">

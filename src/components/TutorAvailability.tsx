@@ -673,9 +673,9 @@ function SessionCard({
   };
 
   const statusLabels = {
-    upcoming: "sắp tới",
-    completed: "đã hoàn thành",
-    cancelled: "đã hủy",
+    upcoming: 'Sắp tới',
+    completed: 'Đã hoàn thành',
+    cancelled: 'Đã hủy',
   };
 
   return (
