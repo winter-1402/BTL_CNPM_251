@@ -30,8 +30,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'; // BỎ CÁC IMPORT CỦA TABS
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'; // BỎ CÁC IMPORT CỦA TABS
 import { toast } from 'sonner';
+import { useMemo } from "react";
 
 type LibraryProps = {
   user: User;
@@ -52,12 +53,6 @@ type Document = {
 };
 
 // ... Dữ liệu documents giữ nguyên
-const documents: Document[] = [
-export function Library({ user }: LibraryProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("all");
-  const [selectedType, setSelectedType] = useState("all");
-
   const documents: Document[] = [
     {
       id: "1",
@@ -413,7 +408,7 @@ export function Library({ user }: LibraryProps) {
             </Card>
           )}
       </div>
-
+        <Tabs>
         <TabsContent value="popular" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {popular.map((doc) => (
@@ -426,7 +421,7 @@ export function Library({ user }: LibraryProps) {
             ))}
           </div>
         </TabsContent>
-      </Tabs>
+  </Tabs>
     </div>
   );
 }
@@ -470,7 +465,8 @@ function DocumentCard({
                 <span className="text-sm text-gray-600">{doc.rating}</span>
               </div>
             </div>
-
+</div>
+</div>
             <div className="space-y-2 mb-3">
               <p className="text-sm text-gray-600 line-clamp-2">
                 {doc.description}
@@ -565,6 +561,9 @@ function DocumentCard({
                         )}
                       </div>
                     </div>
+                      </DialogContent>
+                </Dialog>
+              </div>
                 </div>
             </CardContent>
         </Card>
