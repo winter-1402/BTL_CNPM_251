@@ -316,13 +316,12 @@ export function Library({ user }: LibraryProps) {
                     <p className="text-xs text-gray-500 mt-1">{doc.author}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-4 text-gray-500">
+              </div>
+            )) }
+            <div className="text-center p-4 text-gray-500" hidden={recentlyViewed.length > 0}>
               Bạn chưa xem tài liệu nào gần đây.
             </div>
-          )}
+          </div>
         </CardContent>
       </Card>
 
