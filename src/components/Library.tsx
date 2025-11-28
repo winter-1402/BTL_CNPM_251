@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BookOpen, Download, Search, Filter, FileText, File, Video, FileArchive, Eye, Star } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { BookOpen, Download, Search, FileText, File, Video, FileArchive, Eye, Star, Filter } from 'lucide-react'; // THÊM Filter icon
 import { User } from '../App';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -15,13 +15,12 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { toast } from 'sonner@2.0.3';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'; // BỎ CÁC IMPORT CỦA TABS
+import { toast } from 'sonner';
 
 type LibraryProps = {
   user: User;
@@ -41,12 +40,8 @@ type Document = {
   tags: string[];
 };
 
-export function Library({ user }: LibraryProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState('all');
-  const [selectedType, setSelectedType] = useState('all');
-
-  const documents: Document[] = [
+// ... Dữ liệu documents giữ nguyên
+const documents: Document[] = [
     {
       id: '1',
       title: 'Data Structures and Algorithms - Complete Guide',
@@ -116,7 +111,7 @@ export function Library({ user }: LibraryProps) {
       id: '6',
       title: 'Software Design Principles',
       subject: 'Software Engineering',
-      type: 'pdf',
+      type: 'doc',
       author: 'MSc. Pham Thi Lan',
       uploadDate: '2025-10-12',
       downloads: 267,
@@ -153,28 +148,36 @@ export function Library({ user }: LibraryProps) {
     },
   ];
 
+export function Library({ user }: LibraryProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [recentlyViewedIds, setRecentlyViewedIds] = useState<string[]>([]);
+
   const filteredDocuments = documents.filter((doc) => {
     const matchesSearch =
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+      doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.subject.toLowerCase().includes(searchQuery.toLowerCase()); // Thêm tìm kiếm theo môn học
     const matchesSubject = selectedSubject === 'all' || doc.subject === selectedSubject;
     const matchesType = selectedType === 'all' || doc.type === selectedType;
     return matchesSearch && matchesSubject && matchesType;
   });
 
+  // ... (getFileIcon, handleDownload giữ nguyên)
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'pdf':
-        return <FileText className="h-8 w-8 text-red-500" />;
+        return <FileText className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
       case 'doc':
-        return <File className="h-8 w-8 text-blue-500" />;
+        return <File className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
       case 'video':
-        return <Video className="h-8 w-8 text-purple-500" />;
+        return <Video className="w-8 h-8 text-black fill-black" fill="black" stroke="black" />;
       case 'archive':
-        return <FileArchive className="h-8 w-8 text-orange-500" />;
+        return <FileArchive className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
       default:
-        return <File className="h-8 w-8 text-gray-500" />;
+        return <File className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
     }
   };
 
@@ -185,27 +188,40 @@ export function Library({ user }: LibraryProps) {
   };
 
   const handleView = (doc: Document) => {
+    setRecentlyViewedIds(prevIds => {
+      const filteredIds = prevIds.filter(id => id !== doc.id);
+      return [doc.id, ...filteredIds].slice(0, 3);
+    });
+
     toast.info('Đang mở tài liệu', {
       description: `Đang mở "${doc.title}" trong trình xem...`,
     });
   };
 
-  const recentlyViewed = documents.slice(0, 3);
-  const popular = [...documents].sort((a, b) => b.downloads - a.downloads).slice(0, 4);
+  const recentlyViewed = useMemo(() => {
+    return recentlyViewedIds
+      .map(id => documents.find(doc => doc.id === id))
+      .filter((doc): doc is Document => doc !== undefined);
+  }, [recentlyViewedIds, documents]);
+
+  // BỎ: const popular = [...documents].sort((a, b) => b.downloads - a.downloads).slice(0, 4);
+  // THAY BẰNG: (hoặc không cần nếu bạn không hiển thị "Phổ biến nhất" ở tab riêng nữa)
+  const popular = useMemo(() => {
+      return [...documents].sort((a, b) => b.downloads - a.downloads).slice(0, 4);
+  }, [documents]);
+
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl text-gray-900 mb-2">Thư Viện Tài Liệu</h2>
-          <p className="text-gray-500">
-            Truy cập tài liệu học tập, bài giảng và nguồn tài nguyên học tập
-          </p>
-        </div>
+      <div className="bg-gradient-to-r from-[#138FE0] to-[#0A4E7A] text-white rounded-lg p-6">
+        <h2 className="text-2xl mb-2">Thư Viện Tài Liệu</h2>
+        <p className="text-white-100">
+          Truy cập tài liệu học tập, bài giảng và nguồn tài nguyên học tập
+        </p>
       </div>
-
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* ... (Giữ nguyên các Card thống kê) ... */}
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -213,7 +229,7 @@ export function Library({ user }: LibraryProps) {
                 <p className="text-sm text-gray-500">Tổng Tài Liệu</p>
                 <p className="text-2xl mt-1">{documents.length}</p>
               </div>
-              <BookOpen className="h-10 w-10 text-[#1488D8]" />
+              <BookOpen className="h-10 w-10 text-[#0000]" />
             </div>
           </CardContent>
         </Card>
@@ -224,7 +240,7 @@ export function Library({ user }: LibraryProps) {
                 <p className="text-sm text-gray-500">Tài Liệu PDF</p>
                 <p className="text-2xl mt-1">{documents.filter(d => d.type === 'pdf').length}</p>
               </div>
-              <FileText className="h-10 w-10 text-red-500" />
+              <FileText className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />
             </div>
           </CardContent>
         </Card>
@@ -235,7 +251,7 @@ export function Library({ user }: LibraryProps) {
                 <p className="text-sm text-gray-500">Bài Giảng Video</p>
                 <p className="text-2xl mt-1">{documents.filter(d => d.type === 'video').length}</p>
               </div>
-              <Video className="h-10 w-10 text-purple-500" />
+              <Video className="w-8 h-8 text-black fill-black" fill="black" stroke="black" />
             </div>
           </CardContent>
         </Card>
@@ -246,7 +262,7 @@ export function Library({ user }: LibraryProps) {
                 <p className="text-sm text-gray-500">Đã Tải Xuống</p>
                 <p className="text-2xl mt-1">12</p>
               </div>
-              <Download className="h-10 w-10 text-green-500" />
+              <Download className="w-8 h-8 text-black fill-black" fill="white" stroke="black" />
             </div>
           </CardContent>
         </Card>
@@ -261,46 +277,58 @@ export function Library({ user }: LibraryProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {recentlyViewed.map((doc) => (
-              <div
-                key={doc.id}
-                className="border border-gray-200 rounded-lg p-4 hover:border-[#1488D8] transition-colors cursor-pointer"
-              >
-                <div className="flex items-start gap-3">
-                  {getFileIcon(doc.type)}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm text-gray-900 truncate">{doc.title}</h4>
-                    <p className="text-xs text-gray-500 mt-1">{doc.author}</p>
+          {recentlyViewed.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recentlyViewed.map((doc) => (
+                <div
+                  key={doc.id}
+                  className="border border-gray-200 rounded-lg p-4 hover:border-[#1488D8] transition-colors cursor-pointer"
+                  onClick={() => handleView(doc)}
+                >
+                  <div className="flex items-start gap-3">
+                    {getFileIcon(doc.type)}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm text-gray-900 truncate">{doc.title}</h4>
+                      <p className="text-xs text-gray-500 mt-1">{doc.author}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center p-4 text-gray-500">
+              Bạn chưa xem tài liệu nào gần đây.
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="all" className="space-y-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <TabsList>
-            <TabsTrigger value="all">Tất Cả Tài Liệu</TabsTrigger>
-            <TabsTrigger value="popular">Phổ Biến Nhất</TabsTrigger>
-          </TabsList>
+      {/* THAY THẾ TOÀN BỘ <Tabs> cũ bằng KHU VỰC TÌM KIẾM MỚI */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold text-gray-900">Tìm kiếm tài liệu</h3>
+        
+        {/* CONTAINER CHỨA THANH TÌM KIẾM VÀ FILTER (Theo ảnh) */}
+        <div className="border border-gray-200 rounded-lg p-3 flex flex-col md:flex-row items-stretch gap-2 bg-white shadow-sm">
+          
+          {/* Ô TÌM KIẾM CHÍNH */}
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Tìm kiếm theo tên tài liệu hoặc môn học"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 border-none bg-gray-100 focus-visible:ring-0"
+            />
+          </div>
 
-          {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-3 w-full lg:w-auto">
-            <div className="relative flex-1 lg:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Tìm kiếm tài liệu..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          {/* CONTAINER LỌC (SELECTS) - Sử dụng Select Trigger làm nút Filter */}
+          <div className="flex flex-row gap-2">
+            
+            {/* Filter Môn học (Tất cả khoa) */}
             <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Tất Cả Môn Học" />
+              <SelectTrigger className="w-full md:w-auto h-11 border-gray-300">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Tất cả khoa" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất Cả Môn Học</SelectItem>
@@ -312,9 +340,11 @@ export function Library({ user }: LibraryProps) {
                 <SelectItem value="Programming">Lập Trình</SelectItem>
               </SelectContent>
             </Select>
+            
+            {/* Filter Loại */}
             <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger className="w-full md:w-40">
-                <SelectValue placeholder="Tất Cả Loại" />
+              <SelectTrigger className="w-full md:w-auto h-11 border-gray-300">
+                <SelectValue placeholder="Loại" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất Cả Loại</SelectItem>
@@ -326,8 +356,11 @@ export function Library({ user }: LibraryProps) {
             </Select>
           </div>
         </div>
-
-        <TabsContent value="all" className="space-y-4">
+      </div>
+      
+      {/* HIỂN THỊ KẾT QUẢ TÌM KIẾM (thay cho TabsContent "all") */}
+      <div className="space-y-4 pt-4">
+          <h3 className="text-xl font-semibold text-gray-900">Kết Quả ({filteredDocuments.length} tài liệu)</h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {filteredDocuments.map((doc) => (
               <DocumentCard key={doc.id} doc={doc} onDownload={handleDownload} onView={handleView} />
@@ -341,20 +374,14 @@ export function Library({ user }: LibraryProps) {
               </CardContent>
             </Card>
           )}
-        </TabsContent>
+      </div>
 
-        <TabsContent value="popular" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {popular.map((doc) => (
-              <DocumentCard key={doc.id} doc={doc} onDownload={handleDownload} onView={handleView} />
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
 
+// ... (Component DocumentCard giữ nguyên)
+// ... (Bạn có thể cập nhật lại DocumentCard với code trong câu trả lời trước để đảm bảo icon có màu sắc đẹp hơn)
 function DocumentCard({
   doc,
   onDownload,
@@ -364,132 +391,136 @@ function DocumentCard({
   onDownload: (doc: Document) => void;
   onView: (doc: Document) => void;
 }) {
-  const getFileIcon = (type: string) => {
-    switch (type) {
-      case 'pdf':
-        return <FileText className="h-12 w-12 text-red-500" />;
-      case 'doc':
-        return <File className="h-12 w-12 text-blue-500" />;
-      case 'video':
-        return <Video className="h-12 w-12 text-purple-500" />;
-      case 'archive':
-        return <FileArchive className="h-12 w-12 text-orange-500" />;
-      default:
-        return <File className="h-12 w-12 text-gray-500" />;
-    }
-  };
-
-  return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex gap-4">
-          <div className="flex-shrink-0">{getFileIcon(doc.type)}</div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="text-gray-900 line-clamp-2">{doc.title}</h3>
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm text-gray-600">{doc.rating}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2 mb-3">
-              <p className="text-sm text-gray-600 line-clamp-2">{doc.description}</p>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <span>{doc.author}</span>
-                <span>•</span>
-                <span>{new Date(doc.uploadDate).toLocaleDateString()}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2 mb-3">
-              <Badge variant="secondary">{doc.subject}</Badge>
-              {doc.tags.slice(0, 2).map((tag, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-              <div className="flex items-center gap-4 text-xs text-gray-500">
-                <span>{doc.fileSize}</span>
-                <span className="flex items-center gap-1">
-                  <Download className="h-3 w-3" />
-                  {doc.downloads}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-1" />
-                      Xem
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>{doc.title}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-4">
-                      <div className="flex items-center gap-4">
-                        {getFileIcon(doc.type)}
-                        <div>
-                          <p className="text-sm text-gray-900">Tác giả: {doc.author}</p>
-                          <p className="text-xs text-gray-500">
-                            Tải lên: {new Date(doc.uploadDate).toLocaleDateString('vi-VN')}
-                          </p>
-                          <p className="text-xs text-gray-500">Kích thước: {doc.fileSize}</p>
+    // ... (Giữ nguyên DocumentCard)
+    const getFileIcon = (type: string) => {
+        switch (type) {
+            case 'pdf':
+                return <FileText className="w-12 h-12 text-black fill-black" fill="gray" stroke="black" />;
+            case 'doc':
+                return <File className="w-12 h-12 text-black fill-black" fill="gray" stroke="black" />;
+            case 'video':
+                return <Video className="w-12 h-12 text-black fill-black" fill="black" stroke="black" />;
+            case 'archive':
+                return <FileArchive className="w-8 h-8 text-black fill-black" fill="gray" stroke="black" />;
+            default:
+                return <File className="h-12 w-12 text-gray-500" />;
+        }
+    };
+    return (
+        <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+                <div className="flex gap-4">
+                    <div className="flex-shrink-0">{getFileIcon(doc.type)}</div>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                            <h3 className="text-gray-900 line-clamp-2">{doc.title}</h3>
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                <span className="text-sm text-gray-600">{doc.rating}</span>
+                            </div>
                         </div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm text-gray-900 mb-2">Mô Tả</h4>
-                        <p className="text-sm text-gray-600">{doc.description}</p>
-                      </div>
-                      <div>
-                        <h4 className="text-sm text-gray-900 mb-2">Thẻ</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {doc.tags.map((tag, index) => (
-                            <Badge key={index} variant="secondary">
-                              {tag}
-                            </Badge>
-                          ))}
+
+                        <div className="space-y-2 mb-3">
+                            <p className="text-sm text-gray-600 line-clamp-2">{doc.description}</p>
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <span>{doc.author}</span>
+                                <span>•</span>
+                                <span>{new Date(doc.uploadDate).toLocaleDateString()}</span>
+                            </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2 pt-4 border-t">
-                        <Button
-                          className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90"
-                          onClick={() => onDownload(doc)}
-                        >
-                          <Download className="h-4 w-4 mr-2" />
-                          Tải Xuống
-                        </Button>
-                        {doc.type === 'pdf' && (
-                          <Button
-                            className="flex-1"
-                            variant="outline"
-                            onClick={() => onView(doc)}
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            Xem Trước
-                          </Button>
-                        )}
-                      </div>
+
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            <Badge variant="secondary">{doc.subject}</Badge>
+                            {doc.tags.slice(0, 2).map((tag, index) => (
+                                <Badge key={index} variant="outline" className="text-xs">
+                                    {tag}
+                                </Badge>
+                            ))}
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <span>{doc.fileSize}</span>
+                                <span className="flex items-center gap-1">
+                                    <Download className="h-3 w-3" />
+                                    {doc.downloads}
+                                </span>
+                            </div>
+                            <div className="flex gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => onView(doc)}
+                                        >
+                                            <Eye className="h-4 w-4 mr-1" />
+                                            Xem
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-2xl">
+                                        <DialogHeader>
+                                            <DialogTitle>{doc.title}</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="space-y-4 mt-4">
+                                            <div className="flex items-center gap-4">
+                                                {getFileIcon(doc.type)}
+                                                <div>
+                                                    <p className="text-sm text-gray-900">Tác giả: {doc.author}</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        Tải lên: {new Date(doc.uploadDate).toLocaleDateString('vi-VN')}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">Kích thước: {doc.fileSize}</p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm text-gray-900 mb-2">Mô Tả</h4>
+                                                <p className="text-sm text-gray-600">{doc.description}</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm text-gray-900 mb-2">Thẻ</h4>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {doc.tags.map((tag, index) => (
+                                                        <Badge key={index} variant="secondary">
+                                                            {tag}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2 pt-4 border-t">
+                                                <Button
+                                                    className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90"
+                                                    onClick={() => onDownload(doc)}
+                                                >
+                                                    <Download className="h-4 w-4 mr-2" />
+                                                    Tải Xuống
+                                                </Button>
+                                                {doc.type === 'pdf' && (
+                                                    <Button
+                                                        className="flex-1"
+                                                        variant="outline"
+                                                        onClick={() => onView(doc)}
+                                                    >
+                                                        <Eye className="h-4 w-4 mr-2" />
+                                                        Xem Trước
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                                <Button
+                                    size="sm"
+                                    className="bg-[#1488D8] hover:bg-[#1488D8]/90"
+                                    onClick={() => onDownload(doc)}
+                                >
+                                    <Download className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                  </DialogContent>
-                </Dialog>
-                <Button
-                  size="sm"
-                  className="bg-[#1488D8] hover:bg-[#1488D8]/90"
-                  onClick={() => onDownload(doc)}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+                </div>
+            </CardContent>
+        </Card>
+    );
 }
