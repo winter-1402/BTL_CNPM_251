@@ -1,19 +1,10 @@
-import { useState } from "react";
-import {
-  Calendar,
-  Clock,
-  Video,
-  MapPin,
-  Star,
-  MessageSquare,
-  X,
-  CheckCircle,
-} from "lucide-react";
-import { User, Session } from "../App";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { useState } from 'react';
+import { Calendar, Clock, Video, MapPin, Star, MessageSquare, X, CheckCircle } from 'lucide-react';
+import { User, Session } from '../App';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -22,128 +13,128 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "./ui/dialog";
-import { Textarea } from "./ui/textarea";
-import { Label } from "./ui/label";
-import { toast } from "sonner";
+} from './ui/dialog';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
+import { toast } from 'sonner@2.0.3';
 
 type SessionManagementProps = {
   user: User;
 };
 
-export function SessionManagement({ user }: SessionManagementProps) {
-  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+export function StudentSessionManagement({ user }: SessionManagementProps) {
   const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
 
   const sessions: Session[] = [
     {
-      id: "1",
-      tutorId: "1",
-      tutorName: "Dr. Tran Van Minh",
+      id: '1',
+      tutorId: '1',
+      tutorName: 'Dr. Tran Van Minh',
       studentId: user.id,
       studentName: user.name,
-      subject: "Data Structures & Algorithms",
-      type: "online",
-      status: "scheduled",
-      date: "2025-10-27",
-      time: "14:00",
+      subject: 'Data Structures & Algorithms',
+      type: 'online',
+      status: 'scheduled',
+      date: '2025-10-27',
+      time: '14:00 - 15:30',
       duration: 90,
-      meetingLink: "https://meet.google.com/abc-defg-hij",
-      notes: "Please review sorting algorithms before the session",
+      meetingLink: 'https://meet.google.com/abc-defg-hij',
+      notes: 'Please review sorting algorithms before the session',
     },
     {
-      id: "2",
-      tutorId: "2",
-      tutorName: "MSc. Le Thi Hoa",
+      id: '2',
+      tutorId: '2',
+      tutorName: 'MSc. Le Thi Hoa',
       studentId: user.id,
       studentName: user.name,
-      subject: "Database Systems",
-      type: "in-person",
-      status: "scheduled",
-      date: "2025-10-28",
-      time: "10:00",
+      subject: 'Database Systems',
+      type: 'in-person',
+      status: 'scheduled',
+      date: '2025-10-28',
+      time: '10:00 - 11:00',
       duration: 60,
-      location: "Building A1, Room 302",
-      notes: "Bring your laptop with MySQL installed",
+      location: 'Building A1, Room 302',
+      notes: 'Bring your laptop with MySQL installed',
     },
     {
-      id: "3",
-      tutorId: "3",
-      tutorName: "PhD. Nguyen Thanh Long",
+      id: '3',
+      tutorId: '3',
+      tutorName: 'PhD. Nguyen Thanh Long',
       studentId: user.id,
       studentName: user.name,
-      subject: "Machine Learning",
-      type: "online",
-      status: "completed",
-      date: "2025-10-20",
-      time: "15:00",
+      subject: 'Machine Learning',
+      type: 'online',
+      status: 'completed',
+      date: '2025-10-20',
+      time: '15:00 - 16:30',
       duration: 90,
-      meetingLink: "https://meet.google.com/xyz-abcd-efg",
+      meetingLink: 'https://meet.google.com/xyz-abcd-efg',
       rating: 5,
-      feedback: "Excellent session! Very clear explanations.",
+      feedback: 'Excellent session! Very clear explanations.',
     },
     {
-      id: "4",
-      tutorId: "1",
-      tutorName: "Dr. Tran Van Minh",
+      id: '4',
+      tutorId: '1',
+      tutorName: 'Dr. Tran Van Minh',
       studentId: user.id,
       studentName: user.name,
-      subject: "Algorithms",
-      type: "online",
-      status: "completed",
-      date: "2025-10-15",
-      time: "14:00",
+      subject: 'Algorithms',
+      type: 'online',
+      status: 'completed',
+      date: '2025-10-15',
+      time: '14:00 - 15:00',
       duration: 60,
       rating: 5,
     },
     {
-      id: "5",
-      tutorId: "6",
-      tutorName: "Dr. Hoang Van Khanh",
+      id: '5',
+      tutorId: '6',
+      tutorName: 'Dr. Hoang Van Khanh',
       studentId: user.id,
       studentName: user.name,
-      subject: "Software Engineering",
-      type: "in-person",
-      status: "cancelled",
-      date: "2025-10-18",
-      time: "16:00",
+      subject: 'Software Engineering',
+      type: 'in-person',
+      status: 'cancelled',
+      date: '2025-10-18',
+      time: '16:00 - 17:30',
       duration: 90,
-      location: "Building B4, Room 201",
+      location: 'Building B4, Room 201',
     },
   ];
 
-  const upcomingSessions = sessions.filter((s) => s.status === "scheduled");
-  const completedSessions = sessions.filter((s) => s.status === "completed");
-  const cancelledSessions = sessions.filter((s) => s.status === "cancelled");
+  const upcomingSessions = sessions.filter((s) => s.status === 'scheduled');
+  const completedSessions = sessions.filter((s) => s.status === 'completed');
+  const cancelledSessions = sessions.filter((s) => s.status === 'cancelled');
+   
+  const [upcomingSession, setUpcomingSessions] = useState<Session[]>(upcomingSessions);
+
 
   const handleCancelSession = (session: Session) => {
-    toast.success("Đã hủy buổi học", {
-      description: `Buổi học với ${session.tutorName} đã được hủy.`,
-    });
+    toast.success(`Đã hủy buổi học với ${session.tutorName} vào ngày ${new Date(session.date).toLocaleDateString('vi-VN')}`, 
+    );
   };
 
   const handleSubmitFeedback = () => {
-    toast.success("Đã gửi đánh giá", {
-      description: "Cảm ơn bạn đã đánh giá!",
+    toast.success('Đã gửi đánh giá', {
+      description: 'Cảm ơn bạn đã đánh giá!',
     });
     setRating(0);
-    setFeedback("");
+    setFeedback('');
   };
 
   const SessionCard = ({ session }: { session: Session }) => {
     const statusColors = {
-      scheduled: "bg-blue-100 text-blue-700",
-      completed: "bg-green-100 text-green-700",
-      cancelled: "bg-red-100 text-red-700",
+      scheduled: 'bg-blue-100 text-blue-700',
+      completed: 'bg-green-100 text-green-700',
+      cancelled: 'bg-red-100 text-red-700',
     };
 
     const statusLabels = {
-      scheduled: "Đã Đặt",
-      completed: "Hoàn Thành",
-      cancelled: "Đã Hủy",
+      scheduled: 'Đã Đặt',
+      completed: 'Hoàn Thành',
+      cancelled: 'Đã Hủy',
     };
-
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-6">
@@ -160,22 +151,18 @@ export function SessionManagement({ user }: SessionManagementProps) {
           <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4" />
-              <span>
-                {new Date(session.date).toLocaleDateString("vi-VN", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
+              <span>{new Date(session.date).toLocaleDateString('vi-VN', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>
-                {session.time} ({session.duration} phút)
-              </span>
+              <span>{session.time}</span>
             </div>
-            {session.type === "online" ? (
+            {session.type === 'online' ? (
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Video className="h-4 w-4" />
                 <span>Buổi Học Trực Tuyến</span>
@@ -191,20 +178,20 @@ export function SessionManagement({ user }: SessionManagementProps) {
           {session.notes && (
             <div className="bg-gray-50 rounded p-3 mb-4">
               <p className="text-sm text-gray-600">
-                <span className="text-gray-900">Ghi chú:</span> {session.notes}
+                <span className="text-gr50-900">Ghi chú:</span> {session.notes}
               </p>
             </div>
           )}
 
-          {session.status === "completed" && session.rating && (
+          {session.status === 'completed' && session.rating && (
             <div className="flex items-center gap-1 mb-4">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
                   className={`h-4 w-4 ${
                     star <= session.rating!
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-300"
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-gray-300'
                   }`}
                 />
               ))}
@@ -215,12 +202,12 @@ export function SessionManagement({ user }: SessionManagementProps) {
           )}
 
           <div className="flex gap-2">
-            {session.status === "scheduled" && (
+            {session.status === 'scheduled' && (
               <>
-                {session.type === "online" && session.meetingLink && (
+                {session.type === 'online' && session.meetingLink && (
                   <Button
                     className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90"
-                    onClick={() => window.open(session.meetingLink, "_blank")}
+                    onClick={() => window.open(session.meetingLink, '_blank')}
                   >
                     <Video className="h-4 w-4 mr-2" />
                     Tham Gia
@@ -235,17 +222,20 @@ export function SessionManagement({ user }: SessionManagementProps) {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Hủy Buổi Học</DialogTitle>
-                      <DialogDescription>
-                        Bạn có chắc chắn muốn hủy buổi học với{" "}
-                        {session.tutorName}?
+                      <DialogTitle className="text-center font-semibold"> Xác nhận hủy buổi học này</DialogTitle>
+                      <DialogDescription className="text-center font-semibold">
+                        Bạn có chắc chắn muốn hủy buổi học với {session.tutorName}?
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                      <Button variant="outline">Giữ Buổi Học</Button>
+                      <Button variant="outline" className="flex-1">Giữ Buổi Học</Button>
                       <Button
                         variant="destructive"
-                        onClick={() => handleCancelSession(session)}
+                        onClick={() => {
+                            handleCancelSession(session);
+                            setUpcomingSessions((prev) => prev.filter((s) => s.id !== session.id));
+                        }}
+                        className="flex-1"
                       >
                         Hủy Buổi Học
                       </Button>
@@ -254,7 +244,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
                 </Dialog>
               </>
             )}
-            {session.status === "completed" && !session.rating && (
+            {session.status === 'completed' && !session.rating && (
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="w-full bg-[#1488D8] hover:bg-[#1488D8]/90">
@@ -274,7 +264,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
                       <Label>Điểm Đánh Giá</Label>
                       <div className="flex gap-2 mt-2">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <button
+                          <Button
                             key={star}
                             onClick={() => setRating(star)}
                             className="focus:outline-none"
@@ -282,11 +272,11 @@ export function SessionManagement({ user }: SessionManagementProps) {
                             <Star
                               className={`h-8 w-8 ${
                                 star <= rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
                               }`}
                             />
-                          </button>
+                          </Button>
                         ))}
                       </div>
                     </div>
@@ -318,8 +308,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
         </CardContent>
       </Card>
     );
-  };
-
+}
   return (
     <div className="p-6 space-y-6">
       <div>
@@ -332,7 +321,7 @@ export function SessionManagement({ user }: SessionManagementProps) {
       <Tabs defaultValue="upcoming" className="space-y-6">
         <TabsList>
           <TabsTrigger value="upcoming">
-            Sắp Tới ({upcomingSessions.length})
+            Sắp Tới ({upcomingSession.length})
           </TabsTrigger>
           <TabsTrigger value="completed">
             Hoàn Thành ({completedSessions.length})
@@ -343,19 +332,16 @@ export function SessionManagement({ user }: SessionManagementProps) {
         </TabsList>
 
         <TabsContent value="upcoming" className="space-y-4">
-          {upcomingSessions.length === 0 ? (
+          {upcomingSession.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500">Không có buổi học sắp tới</p>
-                <Button className="mt-4 bg-[#1488D8] hover:bg-[#1488D8]/90">
-                  Đặt Buổi Học
-                </Button>
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {upcomingSessions.map((session) => (
+              {upcomingSession.map((session) => (
                 <SessionCard key={session.id} session={session} />
               ))}
             </div>

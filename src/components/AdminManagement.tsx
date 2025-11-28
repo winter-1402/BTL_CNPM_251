@@ -12,7 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from "./ui/select";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from './ui/dialog';
+} from "./ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,10 +32,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { toast } from 'sonner';
+} from "./ui/alert-dialog";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Textarea } from "./ui/textarea";
+import { toast } from "sonner";
 
 type AdminManagementProps = {
   user: User;
@@ -45,51 +46,60 @@ type SystemUser = {
   id: string;
   name: string;
   email: string;
-  role: 'student' | 'tutor' | 'admin';
+  role: "student" | "tutor" | "coordinator" | "admin";
   faculty?: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
   joinDate: string;
 };
 
 export function AdminManagement({ user }: AdminManagementProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
   const [users, setUsers] = useState<SystemUser[]>([
     {
-      id: '1810123',
-      name: 'Nguyễn Văn An',
-      email: 'an.nguyen@hcmut.edu.vn',
-      role: 'student',
-      faculty: 'Khoa Khoa học và Kỹ thuật Máy tính',
-      status: 'active',
-      joinDate: '2023-09-01',
+      id: "1810123",
+      name: "Nguyễn Văn An",
+      email: "an.nguyen@hcmut.edu.vn",
+      role: "student",
+      faculty: "Khoa Khoa học và Kỹ thuật Máy tính",
+      status: "active",
+      joinDate: "2023-09-01",
     },
     {
-      id: 'T001',
-      name: 'TS. Trần Văn Minh',
-      email: 'minh.tran@hcmut.edu.vn',
-      role: 'tutor',
-      faculty: 'Khoa Khoa học và Kỹ thuật Máy tính',
-      status: 'active',
-      joinDate: '2020-01-15',
+      id: "T001",
+      name: "TS. Trần Văn Minh",
+      email: "minh.tran@hcmut.edu.vn",
+      role: "tutor",
+      faculty: "Khoa Khoa học và Kỹ thuật Máy tính",
+      status: "active",
+      joinDate: "2020-01-15",
     },
     {
-      id: '1810456',
-      name: 'Lê Thị Mai',
-      email: 'mai.le@hcmut.edu.vn',
-      role: 'student',
-      faculty: 'Khoa Điện - Điện tử',
-      status: 'active',
-      joinDate: '2023-09-01',
+      id: "1810456",
+      name: "Lê Thị Mai",
+      email: "mai.le@hcmut.edu.vn",
+      role: "student",
+      faculty: "Khoa Điện - Điện tử",
+      status: "active",
+      joinDate: "2023-09-01",
     },
     {
-      id: 'T002',
-      name: 'ThS. Lê Thị Hoa',
-      email: 'hoa.le@hcmut.edu.vn',
-      role: 'tutor',
-      faculty: 'Khoa Khoa học và Kỹ thuật Máy tính',
+      id: "T002",
+      name: "ThS. Lê Thị Hoa",
+      email: "hoa.le@hcmut.edu.vn",
+      role: "tutor",
+      faculty: "Khoa Khoa học và Kỹ thuật Máy tính",
+      status: "active",
+      joinDate: "2021-03-20",
+    },
+    {
+      id: 'A001',
+      name: 'Trương Đình Khải',
+      email: 'khai.truong@hcmut.edu.vn',
+      role: 'admin',
+      faculty: 'Phòng Đào tạo',
       status: 'active',
-      joinDate: '2021-03-20',
+      joinDate: '2019-10-01',
     },
     {
       id: 'A001',
@@ -107,22 +117,22 @@ export function AdminManagement({ user }: AdminManagementProps) {
       u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.id.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === 'all' || u.role === roleFilter;
+    const matchesRole = roleFilter === "all" || u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
   const handleAddUser = (userData: Partial<SystemUser>) => {
     const newUser: SystemUser = {
       id: Date.now().toString(),
-      name: userData.name || '',
-      email: userData.email || '',
-      role: userData.role || 'student',
+      name: userData.name || "",
+      email: userData.email || "",
+      role: userData.role || "student",
       faculty: userData.faculty,
-      status: 'active',
-      joinDate: new Date().toISOString().split('T')[0],
+      status: "active",
+      joinDate: new Date().toISOString().split("T")[0],
     };
     setUsers([...users, newUser]);
-    toast.success('Thêm người dùng thành công', {
+    toast.success("Thêm người dùng thành công", {
       description: `${newUser.name} đã được thêm vào hệ thống`,
     });
   };
@@ -157,7 +167,7 @@ export function AdminManagement({ user }: AdminManagementProps) {
   const handleDeleteUser = (userId: string) => {
     const user = users.find((u) => u.id === userId);
     setUsers(users.filter((u) => u.id !== userId));
-    toast.success('Xóa người dùng thành công', {
+    toast.success("Xóa người dùng thành công", {
       description: `${user?.name} đã được xóa khỏi hệ thống`,
     });
   };
@@ -192,10 +202,22 @@ export function AdminManagement({ user }: AdminManagementProps) {
   };
 
   const stats = [
-    { label: 'Tổng người dùng', value: users.length, color: 'text-blue-600' },
-    { label: 'Sinh viên', value: users.filter((u) => u.role === 'student').length, color: 'text-green-600' },
-    { label: 'Gia sư', value: users.filter((u) => u.role === 'tutor').length, color: 'text-purple-600' },
-    { label: 'Hoạt động', value: users.filter((u) => u.status === 'active').length, color: 'text-orange-600' },
+    { label: "Tổng người dùng", value: users.length, color: "text-blue-600" },
+    {
+      label: "Sinh viên",
+      value: users.filter((u) => u.role === "student").length,
+      color: "text-green-600",
+    },
+    {
+      label: "Gia sư",
+      value: users.filter((u) => u.role === "tutor").length,
+      color: "text-purple-600",
+    },
+    {
+      label: "Hoạt động",
+      value: users.filter((u) => u.status === "active").length,
+      color: "text-orange-600",
+    },
   ];
 
   return (
@@ -203,7 +225,9 @@ export function AdminManagement({ user }: AdminManagementProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl text-gray-900 mb-2">Quản lý Hệ thống</h2>
-          <p className="text-gray-500">Quản lý người dùng, phân quyền và đồng bộ dữ liệu</p>
+          <p className="text-gray-500">
+            Quản lý người dùng, phân quyền và đồng bộ dữ liệu
+          </p>
         </div>
         
         <Button
@@ -295,6 +319,17 @@ export function AdminManagement({ user }: AdminManagementProps) {
   );
 }
 
+function AddUserDialog({
+  onAdd,
+}: {
+  onAdd: (user: Partial<SystemUser>) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "student" as "student" | "tutor" | "coordinator" | "admin",
+    faculty: "",
 // Đại diện cho "Quản lý tham số hệ thống/Backup" & "Thực hiện khôi phục"
 function SystemConfigPanel() {
   const handleBackup = () => {
@@ -491,12 +526,12 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
 
   const handleSubmit = () => {
     if (!formData.name || !formData.email) {
-      toast.error('Vui lòng điền đầy đủ thông tin');
+      toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
     onAdd(formData);
     setOpen(false);
-    setFormData({ name: '', email: '', role: 'student', faculty: '' });
+    setFormData({ name: "", email: "", role: "student", faculty: "" });
   };
 
   return (
@@ -510,7 +545,9 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Thêm người dùng mới</DialogTitle>
-          <DialogDescription>Nhập thông tin người dùng mới vào hệ thống</DialogDescription>
+          <DialogDescription>
+            Nhập thông tin người dùng mới vào hệ thống
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div>
@@ -518,7 +555,9 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               placeholder="Nguyễn Văn A"
               className="mt-2"
             />
@@ -529,14 +568,21 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               placeholder="email@hcmut.edu.vn"
               className="mt-2"
             />
           </div>
           <div>
             <Label htmlFor="role">Vai trò</Label>
-            <Select value={formData.role} onValueChange={(value: any) => setFormData({ ...formData, role: value })}>
+            <Select
+              value={formData.role}
+              onValueChange={(value: any) =>
+                setFormData({ ...formData, role: value })
+              }
+            >
               <SelectTrigger className="mt-2">
                 <SelectValue />
               </SelectTrigger>
@@ -552,7 +598,9 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
             <Input
               id="faculty"
               value={formData.faculty}
-              onChange={(e) => setFormData({ ...formData, faculty: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, faculty: e.target.value })
+              }
               placeholder="Khoa Khoa học và Kỹ thuật Máy tính"
               className="mt-2"
             />
@@ -562,7 +610,10 @@ function AddUserDialog({ onAdd }: { onAdd: (user: Partial<SystemUser>) => void }
           <Button variant="outline" onClick={() => setOpen(false)}>
             Hủy
           </Button>
-          <Button onClick={handleSubmit} className="bg-[#1488D8] hover:bg-[#1488D8]/90">
+          <Button
+            onClick={handleSubmit}
+            className="bg-[#1488D8] hover:bg-[#1488D8]/90"
+          >
             Thêm người dùng
           </Button>
         </DialogFooter>
@@ -586,6 +637,17 @@ function UserCard({
   const [editData, setEditData] = useState(user);
 
   const roleLabels = {
+    student: "Sinh viên",
+    tutor: "Gia sư",
+    coordinator: "Điều phối viên",
+    admin: "Quản trị viên",
+  };
+
+  const roleColors = {
+    student: "bg-blue-100 text-blue-700",
+    tutor: "bg-purple-100 text-purple-700",
+    coordinator: "bg-green-100 text-green-700",
+    admin: "bg-red-100 text-red-700",
     student: 'Sinh viên',
     tutor: 'Gia sư',
     admin: 'Quản trị viên',
@@ -611,7 +673,10 @@ function UserCard({
       <div className="flex items-center gap-4 flex-1">
         <Avatar className="h-12 w-12">
           <AvatarFallback className="bg-[#1488D8] text-white">
-            {user.name.split(' ').map((n) => n[0]).join('')}
+            {user.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1">
@@ -669,7 +734,9 @@ function UserCard({
                 <Label>Họ và tên</Label>
                 <Input
                   value={editData.name}
-                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
                   className="mt-2"
                 />
               </div>
@@ -677,15 +744,19 @@ function UserCard({
                 <Label>Email</Label>
                 <Input
                   value={editData.email}
-                  onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, email: e.target.value })
+                  }
                   className="mt-2"
                 />
               </div>
               <div>
                 <Label>Khoa</Label>
                 <Input
-                  value={editData.faculty || ''}
-                  onChange={(e) => setEditData({ ...editData, faculty: e.target.value })}
+                  value={editData.faculty || ""}
+                  onChange={(e) =>
+                    setEditData({ ...editData, faculty: e.target.value })
+                  }
                   className="mt-2"
                 />
               </div>
@@ -693,7 +764,9 @@ function UserCard({
                 <Label>Trạng thái</Label>
                 <Select
                   value={editData.status}
-                  onValueChange={(value: any) => setEditData({ ...editData, status: value })}
+                  onValueChange={(value: any) =>
+                    setEditData({ ...editData, status: value })
+                  }
                 >
                   <SelectTrigger className="mt-2">
                     <SelectValue />
@@ -709,7 +782,10 @@ function UserCard({
               <Button variant="outline" onClick={() => setEditOpen(false)}>
                 Hủy
               </Button>
-              <Button onClick={handleEdit} className="bg-[#1488D8] hover:bg-[#1488D8]/90">
+              <Button
+                onClick={handleEdit}
+                className="bg-[#1488D8] hover:bg-[#1488D8]/90"
+              >
                 Lưu thay đổi
               </Button>
             </DialogFooter>
@@ -718,7 +794,11 @@ function UserCard({
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-600 hover:text-red-700"
+            >
               <Trash2 className="h-4 w-4" />
             </Button>
           </AlertDialogTrigger>
@@ -726,7 +806,8 @@ function UserCard({
             <AlertDialogHeader>
               <AlertDialogTitle>Xóa người dùng</AlertDialogTitle>
               <AlertDialogDescription>
-                Bạn có chắc chắn muốn xóa {user.name}? Hành động này không thể hoàn tác.
+                Bạn có chắc chắn muốn xóa {user.name}? Hành động này không thể
+                hoàn tác.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -742,5 +823,155 @@ function UserCard({
         </AlertDialog>
       </div>
     </div>
+  );
+}
+
+function NotificationPanel({ users }: { users: SystemUser[] }) {
+  const [recipients, setRecipients] = useState("all");
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSend = () => {
+    if (!title || !message) {
+      toast.error("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+
+    const recipientCount =
+      recipients === "all"
+        ? users.length
+        : users.filter((u) => u.role === recipients).length;
+
+    toast.success("Đã gửi thông báo", {
+      description: `Thông báo đã được gửi tới ${recipientCount} người dùng`,
+    });
+
+    setTitle("");
+    setMessage("");
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="h-5 w-5 text-[#1488D8]" />
+          Gửi Thông báo
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <Label>Người nhận</Label>
+          <Select value={recipients} onValueChange={setRecipients}>
+            <SelectTrigger className="mt-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tất cả người dùng</SelectItem>
+              <SelectItem value="student">Tất cả sinh viên</SelectItem>
+              <SelectItem value="tutor">Tất cả gia sư</SelectItem>
+              <SelectItem value="coordinator">Tất cả điều phối viên</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="title">Tiêu đề</Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Nhập tiêu đề thông báo"
+            className="mt-2"
+          />
+        </div>
+        <div>
+          <Label htmlFor="message">Nội dung</Label>
+          <Textarea
+            id="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Nhập nội dung thông báo..."
+            rows={6}
+            className="mt-2"
+          />
+        </div>
+        <Button
+          onClick={handleSend}
+          className="w-full bg-[#1488D8] hover:bg-[#1488D8]/90"
+        >
+          <Bell className="h-4 w-4 mr-2" />
+          Gửi thông báo
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PermissionsPanel({
+  users,
+  onUpdate,
+}: {
+  users: SystemUser[];
+  onUpdate: (id: string, updates: Partial<SystemUser>) => void;
+}) {
+  const handleRoleChange = (userId: string, newRole: SystemUser["role"]) => {
+    onUpdate(userId, { role: newRole });
+    toast.success("Đã cập nhật phân quyền");
+  };
+
+  const roleLabels = {
+    student: "Sinh viên",
+    tutor: "Gia sư",
+    coordinator: "Điều phối viên",
+    admin: "Quản trị viên",
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="h-5 w-5 text-[#1488D8]" />
+          Phân quyền Người dùng
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {users.map((u) => (
+            <div
+              key={u.id}
+              className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+            >
+              <div className="flex items-center gap-3">
+                <Avatar>
+                  <AvatarFallback className="bg-[#1488D8] text-white text-sm">
+                    {u.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-gray-900">{u.name}</p>
+                  <p className="text-sm text-gray-500">{u.email}</p>
+                </div>
+              </div>
+              <Select
+                value={u.role}
+                onValueChange={(value: any) => handleRoleChange(u.id, value)}
+              >
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="student">Sinh viên</SelectItem>
+                  <SelectItem value="tutor">Gia sư</SelectItem>
+                  <SelectItem value="coordinator">Điều phối viên</SelectItem>
+                  <SelectItem value="admin">Quản trị viên</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,6 +1,15 @@
-import { Button } from './ui/button';
-import { GraduationCap, BookOpen, Calendar, Users, Phone, MapPin, Mail, ArrowRight } from 'lucide-react';
-import logoImage from 'figma:asset/65759e589011379696ed6326ce69e93c16f75a51.png';
+import { Button } from "./ui/button";
+import {
+  GraduationCap,
+  BookOpen,
+  Calendar,
+  Users,
+  Phone,
+  MapPin,
+  Mail,
+  ArrowRight,
+} from "lucide-react";
+import logoImage from "../assets/LogoBK.png";
 
 type HomepageProps = {
   onNavigateToLogin: () => void;
@@ -13,13 +22,17 @@ export function Homepage({ onNavigateToLogin }: HomepageProps) {
       <header className="bg-white/95 backdrop-blur-sm shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img src={logoImage} alt="HCMUT Logo" className="h-14 w-14 object-contain" />
+            <img
+              src={logoImage}
+              alt="HCMUT Logo"
+              className="h-14 w-14 object-contain"
+            />
             <div>
               <h1 className="text-[#030391]">Hệ thống Hỗ trợ Học tập</h1>
               <p className="text-sm text-gray-600">Đại học Bách Khoa TP.HCM</p>
             </div>
           </div>
-          <Button 
+          <Button
             onClick={onNavigateToLogin}
             className="bg-[#1488D8] hover:bg-[#1488D8]/90"
           >
@@ -36,13 +49,15 @@ export function Homepage({ onNavigateToLogin }: HomepageProps) {
             {/* Left Column */}
             <div className="text-white space-y-6">
               <h1 className="text-5xl">
-                Kết nối Sinh viên<br />và Giảng viên
+                Kết nối Sinh viên
+                <br />
+                và Giảng viên
               </h1>
               <p className="text-xl text-blue-100">
-                Nền tảng hỗ trợ học tập chuyên môn, quản lý buổi học và theo dõi tiến độ 
-                cho sinh viên ĐHBK TP.HCM
+                Nền tảng hỗ trợ học tập chuyên môn, quản lý buổi học và theo dõi
+                tiến độ cho sinh viên ĐHBK TP.HCM
               </p>
-              
+
               {/* Stats */}
               <div className="flex gap-8 pt-4">
                 <div>
@@ -59,7 +74,7 @@ export function Homepage({ onNavigateToLogin }: HomepageProps) {
                 </div>
               </div>
 
-              <Button 
+              <Button
                 onClick={onNavigateToLogin}
                 size="lg"
                 className="bg-white text-[#030391] hover:bg-gray-100 mt-6"

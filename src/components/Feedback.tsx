@@ -1,18 +1,25 @@
-import { useState } from 'react';
-import { MessageSquare, Star, Send, CheckCircle, Calendar, User as UserIcon } from 'lucide-react';
-import { User } from '../App';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { Badge } from './ui/badge';
+import { useState } from "react";
+import {
+  MessageSquare,
+  Star,
+  Send,
+  CheckCircle,
+  Calendar,
+  User as UserIcon,
+} from "lucide-react";
+import { User } from "../App";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Badge } from "./ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from "./ui/select";
 import {
   Dialog,
   DialogContent,
@@ -21,10 +28,10 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from './ui/dialog';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { toast } from 'sonner@2.0.3';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+} from "./ui/dialog";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 type FeedbackProps = {
   user: User;
@@ -40,7 +47,7 @@ type SessionFeedback = {
   rating: number;
   feedback: string;
   submittedDate: string;
-  status: 'pending' | 'submitted';
+  status: "pending" | "submitted";
 };
 
 type CompletedSession = {
@@ -56,59 +63,62 @@ type CompletedSession = {
 export function Feedback({ user }: FeedbackProps) {
   const [feedbackHistory, setFeedbackHistory] = useState<SessionFeedback[]>([
     {
-      id: '1',
-      sessionId: 'S001',
-      tutorName: 'Dr. Tran Van Minh',
-      tutorId: 'T001',
-      subject: 'Data Structures',
-      sessionDate: '2025-10-20',
+      id: "1",
+      sessionId: "S001",
+      tutorName: "Dr. Tran Van Minh",
+      tutorId: "T001",
+      subject: "Data Structures",
+      sessionDate: "2025-10-20",
       rating: 5,
-      feedback: 'Excellent session! Dr. Minh explained binary trees very clearly with great examples.',
-      submittedDate: '2025-10-20',
-      status: 'submitted',
+      feedback:
+        "Excellent session! Dr. Minh explained binary trees very clearly with great examples.",
+      submittedDate: "2025-10-20",
+      status: "submitted",
     },
     {
-      id: '2',
-      sessionId: 'S002',
-      tutorName: 'MSc. Le Thi Hoa',
-      tutorId: 'T002',
-      subject: 'Algorithms',
-      sessionDate: '2025-10-18',
+      id: "2",
+      sessionId: "S002",
+      tutorName: "MSc. Le Thi Hoa",
+      tutorId: "T002",
+      subject: "Algorithms",
+      sessionDate: "2025-10-18",
       rating: 4,
-      feedback: 'Good explanation of sorting algorithms. Would like more practice problems.',
-      submittedDate: '2025-10-18',
-      status: 'submitted',
+      feedback:
+        "Good explanation of sorting algorithms. Would like more practice problems.",
+      submittedDate: "2025-10-18",
+      status: "submitted",
     },
     {
-      id: '3',
-      sessionId: 'S003',
-      tutorName: 'PhD. Nguyen Thanh Long',
-      tutorId: 'T003',
-      subject: 'Machine Learning',
-      sessionDate: '2025-10-15',
+      id: "3",
+      sessionId: "S003",
+      tutorName: "PhD. Nguyen Thanh Long",
+      tutorId: "T003",
+      subject: "Machine Learning",
+      sessionDate: "2025-10-15",
       rating: 5,
-      feedback: 'Outstanding! The neural network concepts were explained with perfect clarity.',
-      submittedDate: '2025-10-15',
-      status: 'submitted',
+      feedback:
+        "Outstanding! The neural network concepts were explained with perfect clarity.",
+      submittedDate: "2025-10-15",
+      status: "submitted",
     },
   ]);
 
   const [completedSessions] = useState<CompletedSession[]>([
     {
-      id: 'S004',
-      tutorName: 'Dr. Hoang Van Khanh',
-      tutorId: 'T006',
-      subject: 'Software Engineering',
-      date: '2025-10-25',
+      id: "S004",
+      tutorName: "Dr. Hoang Van Khanh",
+      tutorId: "T006",
+      subject: "Software Engineering",
+      date: "2025-10-25",
       duration: 90,
       hasFeedback: false,
     },
     {
-      id: 'S005',
-      tutorName: 'Dr. Tran Van Minh',
-      tutorId: 'T001',
-      subject: 'Data Structures',
-      date: '2025-10-23',
+      id: "S005",
+      tutorName: "Dr. Tran Van Minh",
+      tutorId: "T001",
+      subject: "Data Structures",
+      date: "2025-10-23",
       duration: 60,
       hasFeedback: false,
     },
@@ -132,13 +142,14 @@ export function Feedback({ user }: FeedbackProps) {
       sessionDate,
       rating,
       feedback,
-      submittedDate: new Date().toISOString().split('T')[0],
-      status: 'submitted',
+      submittedDate: new Date().toISOString().split("T")[0],
+      status: "submitted",
     };
 
     setFeedbackHistory([newFeedback, ...feedbackHistory]);
-    toast.success('Đã gửi đánh giá!', {
-      description: 'Cảm ơn bạn đã đánh giá. Điều này giúp chúng tôi cải thiện trải nghiệm học tập.',
+    toast.success("Đã gửi đánh giá!", {
+      description:
+        "Cảm ơn bạn đã đánh giá. Điều này giúp chúng tôi cải thiện trải nghiệm học tập.",
     });
   };
 
@@ -150,7 +161,8 @@ export function Feedback({ user }: FeedbackProps) {
         <div>
           <h2 className="text-2xl text-gray-900 mb-2">Đánh Giá Buổi Học</h2>
           <p className="text-gray-500">
-            Cung cấp đánh giá về buổi học của bạn để giúp cải thiện trải nghiệm học tập
+            Cung cấp đánh giá về buổi học của bạn để giúp cải thiện trải nghiệm
+            học tập
           </p>
         </div>
       </div>
@@ -185,7 +197,10 @@ export function Feedback({ user }: FeedbackProps) {
               <div>
                 <p className="text-sm text-gray-500">Điểm TB Đã Cho</p>
                 <p className="text-2xl mt-1">
-                  {(feedbackHistory.reduce((acc, f) => acc + f.rating, 0) / feedbackHistory.length).toFixed(1)}
+                  {(
+                    feedbackHistory.reduce((acc, f) => acc + f.rating, 0) /
+                    feedbackHistory.length
+                  ).toFixed(1)}
                 </p>
               </div>
               <Star className="h-10 w-10 text-yellow-500" />
@@ -199,7 +214,9 @@ export function Feedback({ user }: FeedbackProps) {
           <TabsTrigger value="pending">
             Chờ Đánh Giá ({pendingFeedback.length})
           </TabsTrigger>
-          <TabsTrigger value="history">Lịch Sử Đánh Giá ({feedbackHistory.length})</TabsTrigger>
+          <TabsTrigger value="history">
+            Lịch Sử Đánh Giá ({feedbackHistory.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending" className="space-y-4">
@@ -254,24 +271,32 @@ function PendingFeedbackCard({
   ) => void;
 }) {
   const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState("");
   const [hoverRating, setHoverRating] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
 
   const handleSubmit = () => {
     if (rating === 0) {
-      toast.error('Vui lòng chọn điểm đánh giá');
+      toast.error("Vui lòng chọn điểm đánh giá");
       return;
     }
-    if (feedback.trim() === '') {
-      toast.error('Vui lòng viết nhận xét');
+    if (feedback.trim() === "") {
+      toast.error("Vui lòng viết nhận xét");
       return;
     }
 
-    onSubmit(session.id, session.tutorName, session.tutorId, session.subject, session.date, rating, feedback);
+    onSubmit(
+      session.id,
+      session.tutorName,
+      session.tutorId,
+      session.subject,
+      session.date,
+      rating,
+      feedback
+    );
     setShowDialog(false);
     setRating(0);
-    setFeedback('');
+    setFeedback("");
   };
 
   return (
@@ -280,7 +305,10 @@ function PendingFeedbackCard({
         <div className="flex items-start gap-4 mb-4">
           <Avatar className="h-12 w-12">
             <AvatarFallback className="bg-[#1488D8] text-white">
-              {session.tutorName.split(' ').map((n) => n[0]).join('')}
+              {session.tutorName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">
@@ -289,10 +317,10 @@ function PendingFeedbackCard({
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                {new Date(session.date).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
+                {new Date(session.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
                 })}
               </span>
               <span>{session.duration} min</span>
@@ -322,7 +350,10 @@ function PendingFeedbackCard({
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                 <Avatar className="h-12 w-12">
                   <AvatarFallback className="bg-[#1488D8] text-white">
-                    {session.tutorName.split(' ').map((n) => n[0]).join('')}
+                    {session.tutorName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -335,7 +366,9 @@ function PendingFeedbackCard({
               </div>
 
               <div>
-                <Label className="mb-3 block">Bạn đánh giá buổi học này như thế nào?</Label>
+                <Label className="mb-3 block">
+                  Bạn đánh giá buổi học này như thế nào?
+                </Label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -349,8 +382,8 @@ function PendingFeedbackCard({
                       <Star
                         className={`h-10 w-10 ${
                           star <= (hoverRating || rating)
-                            ? 'fill-yellow-500 text-yellow-500'
-                            : 'text-gray-300'
+                            ? "fill-yellow-500 text-yellow-500"
+                            : "text-gray-300"
                         }`}
                       />
                     </button>
@@ -358,11 +391,11 @@ function PendingFeedbackCard({
                 </div>
                 {rating > 0 && (
                   <p className="text-sm text-gray-600 mt-2">
-                    {rating === 5 && 'Xuất sắc!'}
-                    {rating === 4 && 'Rất tốt'}
-                    {rating === 3 && 'Tốt'}
-                    {rating === 2 && 'Khá'}
-                    {rating === 1 && 'Cần cải thiện'}
+                    {rating === 5 && "Xuất sắc!"}
+                    {rating === 4 && "Rất tốt"}
+                    {rating === 3 && "Tốt"}
+                    {rating === 2 && "Khá"}
+                    {rating === 1 && "Cần cải thiện"}
                   </p>
                 )}
               </div>
@@ -378,7 +411,8 @@ function PendingFeedbackCard({
                   className="mt-2"
                 />
                 <p className="text-xs text-gray-500 mt-2">
-                  Đánh giá của bạn giúp gia sư cải thiện và hỗ trợ sinh viên khác chọn gia sư phù hợp.
+                  Đánh giá của bạn giúp gia sư cải thiện và hỗ trợ sinh viên
+                  khác chọn gia sư phù hợp.
                 </p>
               </div>
             </div>
@@ -410,7 +444,10 @@ function FeedbackHistoryCard({ feedback }: { feedback: SessionFeedback }) {
           <div className="flex items-start gap-4 flex-1">
             <Avatar className="h-12 w-12">
               <AvatarFallback className="bg-[#1488D8] text-white">
-                {feedback.tutorName.split(' ').map((n) => n[0]).join('')}
+                {feedback.tutorName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
@@ -422,8 +459,8 @@ function FeedbackHistoryCard({ feedback }: { feedback: SessionFeedback }) {
                       key={i}
                       className={`h-4 w-4 ${
                         i < feedback.rating
-                          ? 'fill-yellow-500 text-yellow-500'
-                          : 'text-gray-300'
+                          ? "fill-yellow-500 text-yellow-500"
+                          : "text-gray-300"
                       }`}
                     />
                   ))}
@@ -433,10 +470,12 @@ function FeedbackHistoryCard({ feedback }: { feedback: SessionFeedback }) {
               <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  Buổi học: {new Date(feedback.sessionDate).toLocaleDateString('vi-VN')}
+                  Buổi học:{" "}
+                  {new Date(feedback.sessionDate).toLocaleDateString("vi-VN")}
                 </span>
                 <span>
-                  Đã gửi: {new Date(feedback.submittedDate).toLocaleDateString('vi-VN')}
+                  Đã gửi:{" "}
+                  {new Date(feedback.submittedDate).toLocaleDateString("vi-VN")}
                 </span>
               </div>
               <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
