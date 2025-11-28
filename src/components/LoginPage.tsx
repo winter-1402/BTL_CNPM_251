@@ -1,45 +1,48 @@
-import { useState } from 'react';
-import { LogIn, User, Lock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
-import { Alert, AlertDescription } from './ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import logoImage from 'figma:asset/65759e589011379696ed6326ce69e93c16f75a51.png';
+import { useState } from "react";
+import { LogIn, User, Lock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import logoImage from "../assets/LogoBK.png";
 
 type LoginPageProps = {
-  onLogin: (email: string, role: 'student' | 'tutor' | 'coordinator' | 'admin') => void;
+  onLogin: (
+    email: string,
+    role: "student" | "tutor" | "coordinator" | "admin"
+  ) => void;
 };
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Example accounts
   const accounts = {
     student: {
-      email: 'an.nguyen@hcmut.edu.vn',
-      password: 'student123',
-      role: 'student' as const,
+      email: "an.nguyen@hcmut.edu.vn",
+      password: "student123",
+      role: "student" as const,
     },
     tutor: {
-      email: 'minh.tran@hcmut.edu.vn',
-      password: 'tutor123',
-      role: 'tutor' as const,
+      email: "minh.tran@hcmut.edu.vn",
+      password: "tutor123",
+      role: "tutor" as const,
     },
     admin: {
-      email: 'admin@hcmut.edu.vn',
-      password: 'admin123',
-      role: 'admin' as const,
+      email: "admin@hcmut.edu.vn",
+      password: "admin123",
+      role: "admin" as const,
     },
   };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     // Simulate authentication delay
@@ -52,17 +55,19 @@ export function LoginPage({ onLogin }: LoginPageProps) {
       if (account) {
         onLogin(email, account.role);
       } else {
-        setError('Email hoặc mật khẩu không đúng. Vui lòng thử lại hoặc sử dụng một trong các tài khoản mẫu bên dưới.');
+        setError(
+          "Email hoặc mật khẩu không đúng. Vui lòng thử lại hoặc sử dụng một trong các tài khoản mẫu bên dưới."
+        );
       }
       setLoading(false);
     }, 500);
   };
 
-  const handleQuickLogin = (accountType: 'student' | 'tutor' | 'admin') => {
+  const handleQuickLogin = (accountType: "student" | "tutor" | "admin") => {
     const account = accounts[accountType];
     setEmail(account.email);
     setPassword(account.password);
-    setError('');
+    setError("");
   };
 
   return (
@@ -70,7 +75,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-2">
-            <img src={logoImage} alt="HCMUT Logo" className="h-16 w-16 object-contain" />
+            <img
+              src={logoImage}
+              alt="HCMUT Logo"
+              className="h-16 w-16 object-contain"
+            />
           </div>
           <CardTitle className="text-2xl text-[#030391]">Đăng nhập</CardTitle>
           <p className="text-sm text-gray-500">
@@ -123,7 +132,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               disabled={loading}
             >
               <LogIn className="h-4 w-4 mr-2" />
-              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
             </Button>
 
             <div className="text-center">
@@ -138,14 +147,14 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <p className="text-sm text-gray-600 mb-4 text-center">
               Tài khoản Demo - Nhấn để sử dụng:
             </p>
-            
+
             <Tabs defaultValue="student" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="student">Sinh viên</TabsTrigger>
                 <TabsTrigger value="tutor">Giảng viên</TabsTrigger>
                 <TabsTrigger value="admin">Quản trị</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="student" className="space-y-3">
                 <div className="bg-blue-50 rounded-lg p-4 space-y-2">
                   <div className="flex items-center gap-2 mb-2">
@@ -158,11 +167,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     </div>
                   </div>
                   <div className="text-xs space-y-1">
-                    <div><span className="text-gray-600">Email:</span> {accounts.student.email}</div>
-                    <div><span className="text-gray-600">Mật khẩu:</span> {accounts.student.password}</div>
+                    <div>
+                      <span className="text-gray-600">Email:</span>{" "}
+                      {accounts.student.email}
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Mật khẩu:</span>{" "}
+                      {accounts.student.password}
+                    </div>
                   </div>
                   <Button
-                    onClick={() => handleQuickLogin('student')}
+                    onClick={() => handleQuickLogin("student")}
                     variant="outline"
                     size="sm"
                     className="w-full mt-2"
@@ -180,15 +195,23 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     </div>
                     <div>
                       <div className="text-sm">Tài khoản Giảng viên</div>
-                      <div className="text-xs text-gray-500">TS. Trần Văn Minh</div>
+                      <div className="text-xs text-gray-500">
+                        TS. Trần Văn Minh
+                      </div>
                     </div>
                   </div>
                   <div className="text-xs space-y-1">
-                    <div><span className="text-gray-600">Email:</span> {accounts.tutor.email}</div>
-                    <div><span className="text-gray-600">Mật khẩu:</span> {accounts.tutor.password}</div>
+                    <div>
+                      <span className="text-gray-600">Email:</span>{" "}
+                      {accounts.tutor.email}
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Mật khẩu:</span>{" "}
+                      {accounts.tutor.password}
+                    </div>
                   </div>
                   <Button
-                    onClick={() => handleQuickLogin('tutor')}
+                    onClick={() => handleQuickLogin("tutor")}
                     variant="outline"
                     size="sm"
                     className="w-full mt-2"
@@ -206,15 +229,23 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     </div>
                     <div>
                       <div className="text-sm">Tài khoản Quản trị</div>
-                      <div className="text-xs text-gray-500">Quản trị viên Hệ thống</div>
+                      <div className="text-xs text-gray-500">
+                        Quản trị viên Hệ thống
+                      </div>
                     </div>
                   </div>
                   <div className="text-xs space-y-1">
-                    <div><span className="text-gray-600">Email:</span> {accounts.admin.email}</div>
-                    <div><span className="text-gray-600">Mật khẩu:</span> {accounts.admin.password}</div>
+                    <div>
+                      <span className="text-gray-600">Email:</span>{" "}
+                      {accounts.admin.email}
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Mật khẩu:</span>{" "}
+                      {accounts.admin.password}
+                    </div>
                   </div>
                   <Button
-                    onClick={() => handleQuickLogin('admin')}
+                    onClick={() => handleQuickLogin("admin")}
                     variant="outline"
                     size="sm"
                     className="w-full mt-2"
