@@ -1,20 +1,11 @@
-import { useState } from "react";
-import {
-  UserPlus,
-  Edit,
-  Trash2,
-  Shield,
-  Bell,
-  RefreshCw,
-  Search,
-  Filter,
-} from "lucide-react";
-import { User } from "../App";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Badge } from "./ui/badge";
+import { useState, useMemo } from 'react';
+import { UserPlus, Edit, Trash2, Shield, Bell, RefreshCw, Search, Filter, Settings, FileSearch, Download } from 'lucide-react'; 
+import { User } from '../App';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Badge } from './ui/badge';
 import {
   Select,
   SelectContent,
@@ -110,6 +101,15 @@ export function AdminManagement({ user }: AdminManagementProps) {
       status: 'active',
       joinDate: '2019-10-01',
     },
+    {
+      id: 'A001',
+      name: 'Trương Đình Khải',
+      email: 'khai.truong@hcmut.edu.vn',
+      role: 'admin',
+      faculty: 'Phòng Đào tạo',
+      status: 'active',
+      joinDate: '2019-10-01',
+    },
   ]);
 
   const filteredUsers = users.filter((u) => {
@@ -152,7 +152,16 @@ export function AdminManagement({ user }: AdminManagementProps) {
     }
     
     setUsers(users.map((u) => (u.id === userId ? { ...u, ...updates } : u)));
-    toast.success("Cập nhật thông tin thành công");
+    
+    // Thông báo sau khi thay đổi
+    if (updates.role && user && updates.role !== user.role) {
+        toast.success('Phân quyền thành công', {
+             description: `Vai trò của ${user.name} đã được cập nhật thành ${updates.role}.`,
+             duration: 2500
+        });
+    } else {
+        toast.success('Cập nhật thông tin thành công');
+    }
   };
 
   const handleDeleteUser = (userId: string) => {
@@ -164,14 +173,32 @@ export function AdminManagement({ user }: AdminManagementProps) {
   };
 
   const handleSyncData = () => {
-    toast.info("Đang đồng bộ dữ liệu...", {
-      description: "Đồng bộ với HCMUT_DATACORE",
+    toast.info('Đang yêu cầu đồng bộ dữ liệu HCMUT...', {
+      description: 'Kiểm tra trạng thái kết nối API...',
+      duration: 1500
     });
     setTimeout(() => {
-      toast.success("Đồng bộ dữ liệu thành công", {
-        description: "Dữ liệu đã được cập nhật từ HCMUT_DATACORE",
-      });
-    }, 2000);
+      const isApiError = Math.random() < 0.1; 
+      const isViolationError = !isApiError && Math.random() < 0.1;
+      
+      if (isApiError) {
+        toast.error('Lỗi kết nối DATACORE', {
+             description: 'Không thể kết nối với HCMUT_DATACORE.',
+             duration: 4000
+        });
+      } else if (isViolationError) {
+        toast.error('Lỗi vi phạm đồng bộ', {
+             description: 'Dữ liệu đồng bộ vi phạm ràng buộc hệ thống.',
+             duration: 4000
+        });
+      }
+      else {
+        toast.success('Đồng bộ thành công', {
+          description: 'Dữ liệu đã được cập nhật từ HCMUT_DATACORE.',
+          duration: 3000
+        });
+      }
+    }, 2500);
   };
 
   const stats = [
@@ -655,14 +682,14 @@ function UserCard({
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <h3 className="text-gray-900">{user.name}</h3>
-            <Badge className={roleColors[user.role]} variant="secondary">
-              {roleLabels[user.role]}
-            </Badge>
-            {user.status === "active" && (
-              <Badge
-                className="bg-green-100 text-green-700"
-                variant="secondary"
-              >
+            
+            {!showRoleSelect && (
+                 <Badge className={roleColors[user.role]} variant="secondary">
+                    {roleLabels[user.role]}
+                 </Badge>
+            )}
+            {user.status === 'active' && (
+              <Badge className="bg-green-100 text-green-700" variant="secondary">
                 Hoạt động
               </Badge>
             )}
