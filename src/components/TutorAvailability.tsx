@@ -1,9 +1,16 @@
-import { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, Plus, X, Save, Users } from 'lucide-react';
-import { User } from '../App';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Calendar } from './ui/calendar';
+import { useState } from "react";
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  Plus,
+  X,
+  Save,
+  Users,
+} from "lucide-react";
+import { User } from "../App";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -12,21 +19,21 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from './ui/dialog';
+} from "./ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Label } from './ui/label';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Badge } from './ui/badge';
-import { toast } from 'sonner@2.0.3';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Avatar, AvatarFallback } from './ui/avatar';
+} from "./ui/select";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Badge } from "./ui/badge";
+import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +44,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from './ui/alert-dialog';
+} from "./ui/alert-dialog";
 
 type TutorAvailabilityProps = {
   user: User;
@@ -63,63 +70,94 @@ type GroupSession = {
   location?: string;
   meetingLink?: string;
   description: string;
-  status: 'upcoming' | 'completed' | 'cancelled';
+  status: "upcoming" | "completed" | "cancelled";
 };
 
 export function TutorAvailability({ user }: TutorAvailabilityProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
   const [showAddSlotDialog, setShowAddSlotDialog] = useState(false);
   const [showCreateSessionDialog, setShowCreateSessionDialog] = useState(false);
 
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
-    { id: '1', day: 'Thứ Hai', startTime: '14:00', endTime: '16:00', isAvailable: true },
-    { id: '2', day: 'Thứ Tư', startTime: '10:00', endTime: '12:00', isAvailable: true },
-    { id: '3', day: 'Thứ Sáu', startTime: '15:00', endTime: '17:00', isAvailable: true },
+    {
+      id: "1",
+      day: "Thứ Hai",
+      startTime: "14:00",
+      endTime: "16:00",
+      isAvailable: true,
+    },
+    {
+      id: "2",
+      day: "Thứ Tư",
+      startTime: "10:00",
+      endTime: "12:00",
+      isAvailable: true,
+    },
+    {
+      id: "3",
+      day: "Thứ Sáu",
+      startTime: "15:00",
+      endTime: "17:00",
+      isAvailable: true,
+    },
   ]);
 
   const [groupSessions, setGroupSessions] = useState<GroupSession[]>([
     {
-      id: '1',
-      title: 'Giới Thiệu Cấu Trúc Dữ Liệu',
-      subject: 'Cấu Trúc Dữ Liệu',
-      date: '2025-10-28',
-      startTime: '14:00',
-      endTime: '16:00',
+      id: "1",
+      title: "Giới Thiệu Cấu Trúc Dữ Liệu",
+      subject: "Cấu Trúc Dữ Liệu",
+      date: "2025-10-28",
+      startTime: "14:00",
+      endTime: "16:00",
       maxStudents: 20,
-      registeredStudents: ['Nguyễn Văn An', 'Lê Thị Mai', 'Trần Văn Đức'],
-      meetingLink: 'https://meet.google.com/abc-defg-hij',
-      description: 'Giới thiệu các cấu trúc dữ liệu cơ bản bao gồm mảng, danh sách liên kết và ngăn xếp.',
-      status: 'upcoming',
+      registeredStudents: ["Nguyễn Văn An", "Lê Thị Mai", "Trần Văn Đức"],
+      meetingLink: "https://meet.google.com/abc-defg-hij",
+      description:
+        "Giới thiệu các cấu trúc dữ liệu cơ bản bao gồm mảng, danh sách liên kết và ngăn xếp.",
+      status: "upcoming",
     },
     {
-      id: '2',
-      title: 'Workshop Thuật Toán Nâng Cao',
-      subject: 'Thuật Toán',
-      date: '2025-10-30',
-      startTime: '10:00',
-      endTime: '12:00',
+      id: "2",
+      title: "Workshop Thuật Toán Nâng Cao",
+      subject: "Thuật Toán",
+      date: "2025-10-30",
+      startTime: "10:00",
+      endTime: "12:00",
       maxStudents: 15,
-      registeredStudents: ['Phạm Thị Hoa', 'Hoàng Văn Khánh'],
-      location: 'Tòa A1, Phòng 302',
-      description: 'Tìm hiểu sâu về thuật toán sắp xếp và tìm kiếm với bài tập thực hành.',
-      status: 'upcoming',
+      registeredStudents: ["Phạm Thị Hoa", "Hoàng Văn Khánh"],
+      location: "Tòa A1, Phòng 302",
+      description:
+        "Tìm hiểu sâu về thuật toán sắp xếp và tìm kiếm với bài tập thực hành.",
+      status: "upcoming",
     },
     {
-      id: '3',
-      title: 'Cấu Trúc Dữ Liệu Cây',
-      subject: 'Cấu Trúc Dữ Liệu',
-      date: '2025-10-25',
-      startTime: '15:00',
-      endTime: '17:00',
+      id: "3",
+      title: "Cấu Trúc Dữ Liệu Cây",
+      subject: "Cấu Trúc Dữ Liệu",
+      date: "2025-10-25",
+      startTime: "15:00",
+      endTime: "17:00",
       maxStudents: 20,
-      registeredStudents: ['Nguyễn Văn An', 'Lê Thị Mai', 'Võ Thị Lan', 'Trần Văn Đức'],
-      meetingLink: 'https://meet.google.com/xyz-abcd-efg',
-      description: 'Cây nhị phân, BST, cây AVL và các ứng dụng của chúng.',
-      status: 'completed',
+      registeredStudents: [
+        "Nguyễn Văn An",
+        "Lê Thị Mai",
+        "Võ Thị Lan",
+        "Trần Văn Đức",
+      ],
+      meetingLink: "https://meet.google.com/xyz-abcd-efg",
+      description: "Cây nhị phân, BST, cây AVL và các ứng dụng của chúng.",
+      status: "completed",
     },
   ]);
 
-  const handleAddTimeSlot = (day: string, startTime: string, endTime: string) => {
+  const handleAddTimeSlot = (
+    day: string,
+    startTime: string,
+    endTime: string
+  ) => {
     const newSlot: TimeSlot = {
       id: Date.now().toString(),
       day,
@@ -129,34 +167,34 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
     };
     setTimeSlots([...timeSlots, newSlot]);
     setShowAddSlotDialog(false);
-    toast.success('Đã thêm khung giờ', {
+    toast.success("Đã thêm khung giờ", {
       description: `${day} ${startTime} - ${endTime}`,
     });
   };
 
   const handleRemoveTimeSlot = (id: string) => {
     setTimeSlots(timeSlots.filter((slot) => slot.id !== id));
-    toast.success('Đã xóa khung giờ');
+    toast.success("Đã xóa khung giờ");
   };
 
   const handleCreateGroupSession = (sessionData: Partial<GroupSession>) => {
     const newSession: GroupSession = {
       id: Date.now().toString(),
-      title: sessionData.title || '',
-      subject: sessionData.subject || '',
-      date: sessionData.date || '',
-      startTime: sessionData.startTime || '',
-      endTime: sessionData.endTime || '',
+      title: sessionData.title || "",
+      subject: sessionData.subject || "",
+      date: sessionData.date || "",
+      startTime: sessionData.startTime || "",
+      endTime: sessionData.endTime || "",
       maxStudents: sessionData.maxStudents || 20,
       registeredStudents: [],
       location: sessionData.location,
       meetingLink: sessionData.meetingLink,
-      description: sessionData.description || '',
-      status: 'upcoming',
+      description: sessionData.description || "",
+      status: "upcoming",
     };
     setGroupSessions([...groupSessions, newSession]);
     setShowCreateSessionDialog(false);
-    toast.success('Đã tạo buổi học nhóm', {
+    toast.success("Đã tạo buổi học nhóm", {
       description: `${sessionData.title} vào ngày ${sessionData.date}`,
     });
   };
@@ -166,26 +204,30 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
     if (session) {
       setGroupSessions(
         groupSessions.map((s) =>
-          s.id === sessionId ? { ...s, status: 'cancelled' as const } : s
+          s.id === sessionId ? { ...s, status: "cancelled" as const } : s
         )
       );
-      
+
       // Notify all registered students
       session.registeredStudents.forEach((student) => {
-        toast.info('Đã gửi thông báo hủy', {
+        toast.info("Đã gửi thông báo hủy", {
           description: `${student} đã được thông báo về việc hủy buổi "${session.title}"`,
         });
       });
 
-      toast.success('Đã hủy buổi học', {
+      toast.success("Đã hủy buổi học", {
         description: `Tất cả ${session.registeredStudents.length} sinh viên đã đăng ký đã được thông báo.`,
       });
     }
   };
 
-  const upcomingSessions = groupSessions.filter((s) => s.status === 'upcoming');
-  const completedSessions = groupSessions.filter((s) => s.status === 'completed');
-  const cancelledSessions = groupSessions.filter((s) => s.status === 'cancelled');
+  const upcomingSessions = groupSessions.filter((s) => s.status === "upcoming");
+  const completedSessions = groupSessions.filter(
+    (s) => s.status === "completed"
+  );
+  const cancelledSessions = groupSessions.filter(
+    (s) => s.status === "cancelled"
+  );
 
   return (
     <div className="p-6 space-y-6">
@@ -207,9 +249,15 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
                 <Clock className="h-5 w-5 text-[#1488D8]" />
                 Lịch Rảnh Hàng Tuần
               </span>
-              <Dialog open={showAddSlotDialog} onOpenChange={setShowAddSlotDialog}>
+              <Dialog
+                open={showAddSlotDialog}
+                onOpenChange={setShowAddSlotDialog}
+              >
                 <DialogTrigger asChild>
-                  <Button size="sm" className="bg-[#1488D8] hover:bg-[#1488D8]/90">
+                  <Button
+                    size="sm"
+                    className="bg-[#1488D8] hover:bg-[#1488D8]/90"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Thêm Khung Giờ
                   </Button>
@@ -232,7 +280,9 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
                 <div className="text-center py-8 text-gray-500">
                   <Clock className="h-12 w-12 mx-auto mb-2 text-gray-400" />
                   <p>Chưa có khung giờ rảnh</p>
-                  <p className="text-sm mt-1">Thêm khung giờ để sinh viên biết khi nào bạn rảnh</p>
+                  <p className="text-sm mt-1">
+                    Thêm khung giờ để sinh viên biết khi nào bạn rảnh
+                  </p>
                 </div>
               ) : (
                 timeSlots.map((slot) => (
@@ -292,7 +342,10 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
               <Users className="h-5 w-5 text-[#1488D8]" />
               Buổi Học Nhóm
             </span>
-            <Dialog open={showCreateSessionDialog} onOpenChange={setShowCreateSessionDialog}>
+            <Dialog
+              open={showCreateSessionDialog}
+              onOpenChange={setShowCreateSessionDialog}
+            >
               <DialogTrigger asChild>
                 <Button className="bg-[#1488D8] hover:bg-[#1488D8]/90">
                   <Plus className="h-4 w-4 mr-2" />
@@ -314,9 +367,15 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
         <CardContent>
           <Tabs defaultValue="upcoming">
             <TabsList>
-              <TabsTrigger value="upcoming">Sắp Tới ({upcomingSessions.length})</TabsTrigger>
-              <TabsTrigger value="completed">Đã Hoàn Thành ({completedSessions.length})</TabsTrigger>
-              <TabsTrigger value="cancelled">Đã Hủy ({cancelledSessions.length})</TabsTrigger>
+              <TabsTrigger value="upcoming">
+                Sắp Tới ({upcomingSessions.length})
+              </TabsTrigger>
+              <TabsTrigger value="completed">
+                Đã Hoàn Thành ({completedSessions.length})
+              </TabsTrigger>
+              <TabsTrigger value="cancelled">
+                Đã Hủy ({cancelledSessions.length})
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="upcoming" className="space-y-4 mt-4">
@@ -363,10 +422,14 @@ export function TutorAvailability({ user }: TutorAvailabilityProps) {
   );
 }
 
-function AddTimeSlotForm({ onSubmit }: { onSubmit: (day: string, start: string, end: string) => void }) {
-  const [day, setDay] = useState('Thứ Hai');
-  const [startTime, setStartTime] = useState('09:00');
-  const [endTime, setEndTime] = useState('10:00');
+function AddTimeSlotForm({
+  onSubmit,
+}: {
+  onSubmit: (day: string, start: string, end: string) => void;
+}) {
+  const [day, setDay] = useState("Thứ Hai");
+  const [startTime, setStartTime] = useState("09:00");
+  const [endTime, setEndTime] = useState("10:00");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -424,17 +487,21 @@ function AddTimeSlotForm({ onSubmit }: { onSubmit: (day: string, start: string, 
   );
 }
 
-function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession>) => void }) {
+function CreateSessionForm({
+  onSubmit,
+}: {
+  onSubmit: (data: Partial<GroupSession>) => void;
+}) {
   const [formData, setFormData] = useState({
-    title: '',
-    subject: '',
-    date: '',
-    startTime: '10:00',
-    endTime: '12:00',
-    maxStudents: '20',
-    location: '',
-    meetingLink: '',
-    description: '',
+    title: "",
+    subject: "",
+    date: "",
+    startTime: "10:00",
+    endTime: "12:00",
+    maxStudents: "20",
+    location: "",
+    meetingLink: "",
+    description: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -461,16 +528,25 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
 
       <div>
         <Label htmlFor="subject">Môn Học</Label>
-        <Select value={formData.subject} onValueChange={(value) => setFormData({ ...formData, subject: value })}>
+        <Select
+          value={formData.subject}
+          onValueChange={(value) =>
+            setFormData({ ...formData, subject: value })
+          }
+        >
           <SelectTrigger className="mt-2">
             <SelectValue placeholder="Chọn môn học" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Cấu Trúc Dữ Liệu">Cấu Trúc Dữ Liệu</SelectItem>
             <SelectItem value="Thuật Toán">Thuật Toán</SelectItem>
-            <SelectItem value="Hệ Quản Trị Cơ Sở Dữ Liệu">Hệ Quản Trị Cơ Sở Dữ Liệu</SelectItem>
+            <SelectItem value="Hệ Quản Trị Cơ Sở Dữ Liệu">
+              Hệ Quản Trị Cơ Sở Dữ Liệu
+            </SelectItem>
             <SelectItem value="Học Máy">Học Máy</SelectItem>
-            <SelectItem value="Công Nghệ Phần Mềm">Công Nghệ Phần Mềm</SelectItem>
+            <SelectItem value="Công Nghệ Phần Mềm">
+              Công Nghệ Phần Mềm
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -493,7 +569,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
             id="maxStudents"
             type="number"
             value={formData.maxStudents}
-            onChange={(e) => setFormData({ ...formData, maxStudents: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, maxStudents: e.target.value })
+            }
             className="mt-2"
             min="1"
             required
@@ -508,7 +586,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
             id="startTime"
             type="time"
             value={formData.startTime}
-            onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, startTime: e.target.value })
+            }
             className="mt-2"
             required
           />
@@ -519,7 +599,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
             id="endTime"
             type="time"
             value={formData.endTime}
-            onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, endTime: e.target.value })
+            }
             className="mt-2"
             required
           />
@@ -531,7 +613,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
         <Input
           id="location"
           value={formData.location}
-          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, location: e.target.value })
+          }
           placeholder="VD: Tòa A1, Phòng 302"
           className="mt-2"
         />
@@ -542,7 +626,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
         <Input
           id="meetingLink"
           value={formData.meetingLink}
-          onChange={(e) => setFormData({ ...formData, meetingLink: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, meetingLink: e.target.value })
+          }
           placeholder="https://meet.google.com/..."
           className="mt-2"
         />
@@ -553,7 +639,9 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
         <Textarea
           id="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
           placeholder="Mô tả nội dung sẽ được giảng dạy trong buổi học này..."
           className="mt-2"
           rows={3}
@@ -571,17 +659,23 @@ function CreateSessionForm({ onSubmit }: { onSubmit: (data: Partial<GroupSession
   );
 }
 
-function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: (id: string) => void }) {
+function SessionCard({
+  session,
+  onCancel,
+}: {
+  session: GroupSession;
+  onCancel?: (id: string) => void;
+}) {
   const statusColors = {
-    upcoming: 'bg-blue-100 text-blue-700',
-    completed: 'bg-green-100 text-green-700',
-    cancelled: 'bg-red-100 text-red-700',
+    upcoming: "bg-blue-100 text-blue-700",
+    completed: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-700",
   };
 
   const statusLabels = {
-    upcoming: 'sắp tới',
-    completed: 'đã hoàn thành',
-    cancelled: 'đã hủy',
+    upcoming: "sắp tới",
+    completed: "đã hoàn thành",
+    cancelled: "đã hủy",
   };
 
   return (
@@ -603,22 +697,29 @@ function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: 
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-gray-600">
               <CalendarIcon className="h-4 w-4" />
-              <span>{new Date(session.date).toLocaleDateString('vi-VN', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}</span>
+              <span>
+                {new Date(session.date).toLocaleDateString("vi-VN", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>{session.startTime} - {session.endTime}</span>
+              <span>
+                {session.startTime} - {session.endTime}
+              </span>
             </div>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-gray-600">
               <Users className="h-4 w-4" />
-              <span>{session.registeredStudents.length} / {session.maxStudents} sinh viên</span>
+              <span>
+                {session.registeredStudents.length} / {session.maxStudents} sinh
+                viên
+              </span>
             </div>
             {session.location && (
               <div className="text-gray-600">📍 {session.location}</div>
@@ -631,13 +732,21 @@ function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: 
 
         {session.registeredStudents.length > 0 && (
           <div className="mb-4">
-            <Label className="text-xs text-gray-500 mb-2">Sinh Viên Đã Đăng Ký</Label>
+            <Label className="text-xs text-gray-500 mb-2">
+              Sinh Viên Đã Đăng Ký
+            </Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {session.registeredStudents.slice(0, 3).map((student, index) => (
-                <div key={index} className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1">
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1"
+                >
                   <Avatar className="h-6 w-6">
                     <AvatarFallback className="bg-[#1488D8] text-white text-xs">
-                      {student.split(' ').map((n) => n[0]).join('')}
+                      {student
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-xs text-gray-700">{student}</span>
@@ -652,12 +761,12 @@ function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: 
           </div>
         )}
 
-        {session.status === 'upcoming' && onCancel && (
+        {session.status === "upcoming" && onCancel && (
           <div className="flex gap-2 pt-4 border-t border-gray-200">
             {session.meetingLink && (
               <Button
                 className="flex-1 bg-[#1488D8] hover:bg-[#1488D8]/90"
-                onClick={() => window.open(session.meetingLink, '_blank')}
+                onClick={() => window.open(session.meetingLink, "_blank")}
               >
                 Tham Gia Họp
               </Button>
@@ -673,7 +782,9 @@ function SessionCard({ session, onCancel }: { session: GroupSession; onCancel?: 
                 <AlertDialogHeader>
                   <AlertDialogTitle>Hủy Buổi Học</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Bạn có chắc muốn hủy buổi học này không? Tất cả {session.registeredStudents.length} sinh viên đã đăng ký sẽ được thông báo qua email và thông báo trong ứng dụng.
+                    Bạn có chắc muốn hủy buổi học này không? Tất cả{" "}
+                    {session.registeredStudents.length} sinh viên đã đăng ký sẽ
+                    được thông báo qua email và thông báo trong ứng dụng.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
