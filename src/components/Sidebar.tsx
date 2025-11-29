@@ -14,8 +14,8 @@ type SidebarProps = {
 
 export function Sidebar({ currentView, setCurrentView, user, isOpen, setIsOpen, logoImage, onLogout }: SidebarProps) {
   const menuItems = [
-    { id: 'dashboard', label: 'Tổng quan', icon: Home, roles: ['student', 'tutor', 'coordinator', 'admin'] },
-    { id: 'tutors', label: 'Tìm gia sư', icon: Users, roles: ['student'] },
+    { id: 'dashboard', label: 'Tổng quan', icon: Home, roles: ["student", 'tutor', 'coordinator', 'admin'] },
+    { id: 'tutors', label: 'Tìm gia sư', icon: Users, roles: ["student"] },
     { id: 'sessions', label: 'Buổi học của tôi', icon: Calendar, roles: ['student', 'tutor'] },
     { id: 'feedback', label: 'Đánh giá buổi học', icon: MessageSquare, roles: ['student'] },
     { id: 'availability', label: 'Lịch dạy & Buổi học', icon: Clock, roles: ['tutor'] },
@@ -23,9 +23,7 @@ export function Sidebar({ currentView, setCurrentView, user, isOpen, setIsOpen, 
     { id: 'reports', label: 'Báo cáo & Phân tích', icon: FileText, roles: ['coordinator'] },
     { id: 'profile', label: 'Hồ sơ cá nhân', icon: User, roles: ['student', 'tutor', 'coordinator'] },
   ];
-
-  const filteredMenuItems = menuItems.filter((item) => item.roles.includes(user.role));
-
+  const filteredMenuItems = menuItems.filter((item) => item.roles.includes(user.role[0]));
   return (
     <>
       {/* Mobile overlay */}
@@ -66,6 +64,7 @@ export function Sidebar({ currentView, setCurrentView, user, isOpen, setIsOpen, 
           {filteredMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
+            console.log("Rendering menu item:", item.id, "Active:", isActive);
             return (
               <button
                 key={item.id}

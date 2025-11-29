@@ -37,7 +37,7 @@ export function Header({ user, toggleSidebar, onLogout }: HeaderProps) {
             <Menu className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-gray-900">Chào mừng trở lại, {user.name.split(' ').slice(-1)[0]}!</h1>
+            <h1 className="text-gray-900">Chào mừng trở lại, {user.name[0].split(' ').slice(-1)[0]}!</h1>
             <p className="text-sm text-gray-500">
               {user.faculty}
             </p>
@@ -74,7 +74,7 @@ export function Header({ user, toggleSidebar, onLogout }: HeaderProps) {
               <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
                 <Avatar>
                   <AvatarFallback className="bg-[#1488D8] text-white">
-                    {user.name.split(' ').map((n) => n[0]).join('')}
+                    {user.name[0].split(' ').map((n) => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
               </Button>

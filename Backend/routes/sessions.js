@@ -1,7 +1,7 @@
 // ============================================
 // routes/sessions.js - Complete Session Routes
 // ============================================
-
+const express = require("express");
 const sessionRouter = express.Router();
 const { SessionService } = require("../services/SessionService");
 const { authenticate, authorize } = require("../middleware/auth");

@@ -1,7 +1,8 @@
 // ============================================
 // routes/notifications.js - Notification Routes
 // ============================================
-
+const express = require("express");
+const { authenticate } = require("../middleware/auth");
 const notificationRouter = express.Router();
 const { NotificationService } = require("../services/NotificationService");
 

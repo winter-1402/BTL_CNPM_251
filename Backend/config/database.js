@@ -10,7 +10,7 @@ class Database {
     this.pool = mysql.createPool({
       host: "localhost",
       user: "root",
-      password: "yourpassword",
+      password: "cuongbui789tuan",
       database: dbName,
       waitForConnections: true,
       connectionLimit: 20,

@@ -10,7 +10,7 @@ class NotificationService {
   static async initialize() {
     try {
       // Initialize email transporter
-      this.transporter = nodemailer.createTransporter({
+      this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp.gmail.com",
         port: process.env.SMTP_PORT || 587,
         secure: false,

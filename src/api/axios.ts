@@ -1,7 +1,10 @@
+// ============================================
+// src/api/axios.ts - Axios Configuration
+// ============================================
 import axios from "axios";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -11,7 +14,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add token to requests
+// Request interceptor - Add auth token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -20,10 +23,12 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
-// Handle 401 errors
+// Response interceptor - Handle errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
