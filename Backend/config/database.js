@@ -1,116 +1,102 @@
 // ============================================
-// config/database.js - Database Configuration
+// config/mssql.js - Microsoft SQL Server Configuration
 // ============================================
 
-const mysql = require("mysql2/promise");
+const sql = require('mssql');
+const dotenv = require('dotenv');
 
-class Database {
-  constructor(dbName) {
-    this.dbName = dbName;
-    this.pool = mysql.createPool({
-      host: "localhost",
-      user: "root",
-      password: "cuongbui789tuan",
-      database: dbName,
-      waitForConnections: true,
-      connectionLimit: 20,
-      idleTimeout: 30000,
-    });
+dotenv.config();
+// Build config from environment variables for flexibility
+const baseConfig = {
+  user: process.env.MSSQL_USER ,
+  password: process.env.MSSQL_PASSWORD,
+  server: process.env.MSSQL_HOST , // hostname or IP
+  port: parseInt(process.env.MSSQL_PORT, 10),
+  database: process.env.MSSQL_DB,
+  options: {
+    encrypt: process.env.MSSQL_ENCRYPT === 'true', // required for Azure
+    trustServerCertificate: process.env.MSSQL_TRUST_CERT !== 'false', // allow self-signed certs locally
+    enableArithAbort: true
+  },
+  pool: {
+    max: parseInt(process.env.MSSQL_POOL_MAX || '10', 10),
+    min: 0,
+    idleTimeoutMillis: parseInt(process.env.MSSQL_POOL_IDLE || '30000', 10)
+  }
+};
+
+class MSSQLDatabase {
+  constructor(config = baseConfig) {
+    this.config = config;
+    this.pool = null;
   }
 
   async connect() {
+    if (this.pool) return this.pool; // reuse
     try {
-      const conn = await this.pool.getConnection();
-      console.log("MySQL connected successfully");
-      conn.release();
-    } catch (error) {
-      console.error("MySQL connection error:", error);
-      throw error;
+      this.pool = await sql.connect(this.config);
+      console.log('MSSQL connected successfully');
+      return this.pool;
+    } catch (err) {
+      console.error('MSSQL connection error:', err);
+      throw err;
     }
   }
 
-  async storeData(table, data) {
+  // Parameterized query helper
+  async query(queryString, params = []) {
     try {
-      const keys = Object.keys(data);
-      const values = Object.values(data);
-      const placeholders = keys.map(() => "?").join(", ");
-
-      const query = `INSERT INTO ${table} (${keys.join(
-        ", "
-      )}) VALUES (${placeholders})`;
-      const [result] = await this.pool.query(query, values);
-
-      return { id: result.insertId, ...data };
-    } catch (error) {
-      console.error("Error storing data:", error);
-      throw error;
+      await this.connect();
+      const request = new sql.Request();
+      const transformed = this._transformPlaceholders(queryString, params.length ,params);
+      params.forEach((val, idx) => {
+        // Name parameters sequentially: p0, p1, ...
+        request.input(`p${idx}`, val);
+      });
+      // Replace ? placeholders with parmeter names
+      const result = await request.query(transformed);
+      return result.recordset;
+    } 
+    catch (err) {
+      console.error('MSSQL query error:', err);
+      throw err;
     }
   }
 
-  async updateData(table, recordId, data) {
-    try {
-      const keys = Object.keys(data);
-      const values = Object.values(data);
-
-      const setClause = keys.map((key) => `${key} = ?`).join(", ");
-
-      const query = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
-      const [result] = await this.pool.query(query, [...values, recordId]);
-
-      return result;
-    } catch (error) {
-      console.error("Error updating data:", error);
-      throw error;
-    }
+  // Insert helper similar to MySQL version
+  async insert(table, data) {
+    await this.connect();
+    const keys = Object.keys(data);
+    const placeholders = keys.map((_, i) => `@p${i}`);
+    const values = Object.values(data);
+    const sqlText = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders.join(', ')}); SELECT SCOPE_IDENTITY() AS id;`;
+    const rows = await this.query(sqlText, values);
+    return { id: rows[0].id, ...data };
   }
 
-  async deleteData(table, recordId) {
-    try {
-      const query = `DELETE FROM ${table} WHERE id = ?`;
-      const [result] = await this.pool.query(query, [recordId]);
-
-      return result;
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      throw error;
-    }
+  async update(table, idColumn, idValue, data) {
+    await this.connect();
+    const keys = Object.keys(data);
+    const setClause = keys.map((k, i) => `${k} = @p${i}`).join(', ');
+    const values = Object.values(data);
+    const sqlText = `UPDATE ${table} SET ${setClause} WHERE ${idColumn} = @p${keys.length}`;
+    const rows = await this.query(sqlText, [...values, idValue]);
+    return rows;
   }
 
-  async queryData(table, filters = {}) {
-    try {
-      const keys = Object.keys(filters);
-
-      if (keys.length === 0) {
-        const [rows] = await this.pool.query(`SELECT * FROM ${table}`);
-        return rows;
-      }
-
-      const whereClause = keys.map((key) => `${key} = ?`).join(" AND ");
-      const values = Object.values(filters);
-
-      const [rows] = await this.pool.query(
-        `SELECT * FROM ${table} WHERE ${whereClause}`,
-        values
-      );
-
-      return rows;
-    } catch (error) {
-      console.error("Error querying data:", error);
-      throw error;
+  _transformPlaceholders(text, count ,params=[]) {
+    let transformed = text;
+    for (let i = 0; i < count; i++) {
+      transformed = transformed.replace('?', `@p${i}`);
     }
-  }
-
-  async query(sql, params = []) {
-    try {
-      const [rows] = await this.pool.query(sql, params);
-      return rows;
-    } catch (error) {
-      console.error("Error executing query:", error);
-      throw error;
-    }
+    return transformed;
   }
 }
 
-const db = new Database("tutor_system");
+const mssqlDb = new MSSQLDatabase();
 
-module.exports = { Database, db };
+module.exports = { MSSQLDatabase, mssqlDb };
+// Test connection (uncomment to test)
+// ============================================
+// End of mssql.js
+// ============================================

@@ -19,12 +19,12 @@ type DashboardProps = {
 
 export function Dashboard({ user }: DashboardProps) {
   // Show tutor-specific dashboard for tutors
-  if (user.role === "tutor") {
+  if (user.role[0] === "tutor") {
     return <TutorDashboard user={user} />;
   }
 
   // Show admin management for admins
-  if (user.role === "admin") {
+  if (user.role[0] === "admin") {
     return <AdminManagement user={user} />;
   }
 
