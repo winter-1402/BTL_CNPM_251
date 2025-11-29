@@ -160,33 +160,46 @@ INSERT INTO booked (availability_Id, student_id,  booked_types, topic) VALUES
 GO
 
 INSERT INTO buoi_hoc(buoi_hoc_Id, tutorId, studentId, thoi_gian, thoi_luong , kieu, topic , dia_diem , duong_link , notes,tien_do) VALUES
-(0,0,1,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Trúc D? Li?u & Thu?t Toán',N'H6-107',NULL,N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',85),
-(0,0,3,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Trúc D? Li?u & Thu?t Toán',N'H6-107',NULL,N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',85),
-(0,0,4,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Trúc D? Li?u & Thu?t Toán',N'H6-107',NULL,N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',85),
-(0,0,5,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Trúc D? Li?u & Thu?t Toán',N'H6-107',NULL,N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',85),
-(1,0,3,'2025-10-28 10:00',60,N'Tr?c tuy?n',N'Thu?t Toán',NULL,N'https://meet.google.com/abc-defg-hij',N'Bu?i h?c ??u tiên - gi?i thi?u',0),
-(2,0,3,'2025-10-29 15:00',90,N'Tr?c Ti?p',N'C?u Trúc D? Li?u',N'H6-307',NULL,N'C?u trúc d? li?u cây',60),
-(3,1,2,'2025-10-24 14:00',75,N'Tr?c Ti?p',N'C?u Trúc D? Li?u',N'H3-302',NULL,N'Sinh viên mu?n ôn l?i stack',75),
-(4,1,3,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'Công ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',30),
-(4,1,2,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'Công ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',30),
-(5,1,4,'2025-10-28 14:00',60,N'Tr?c Ti?p',N'Thu?t Toán',N'H6-507',NULL,N'Sinh viên mu?n ôn l?i thu?t toán s?p x?p',80),
-(6,1,5,'2025-10-28 16:00',60,N'Tr?c Ti?p',N'Thu?t Toán',N'H6-507',NULL ,N'Bu?i h?c ??u tiên - gi?i thi?u',0),
-(7,1,5,'2025-10-29 15:00',90,N'Tr?c tuy?n',N'Công ngh? ph?n m?m','H6-307',NULL,N'C?u trúc d? li?u cây',60)
+(0,0,1,'2025-10-27 14:00',90,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu & Thuật Toán',N'H6-107',NULL,N'Sinh viên muốn ôn lại thuật toán sắp xếp',85),
+(0,0,3,'2025-10-27 14:00',90,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu & Thuật Toán',N'H6-107',NULL,N'Sinh viên muốn ôn lại thuật toán sắp xếp',85),
+(0,0,4,'2025-10-27 14:00',90,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu & Thuật Toán',N'H6-107',NULL,N'Sinh viên muốn ôn lại thuật toán sắp xếp',85),
+(0,0,5,'2025-10-27 14:00',90,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu & Thuật Toán',N'H6-107',NULL,N'Sinh viên muốn ôn lại thuật toán sắp xếp',85),
+(1,0,3,'2025-10-28 10:00',60,N'Trực Tuyến',N'Thuật Toán',NULL,N'https://meet.google.com/abc-defg-hij',N'Bu?i h?c ??u tiên - gi?i thi?u',0),
+(2,0,3,'2025-10-29 15:00',90,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu',N'H6-307',NULL,N'Cấu trúc dữ liệu cây',60),
+(3,1,2,'2025-10-24 14:00',75,N'Trực Tiếp',N'Cấu Trúc Dữ Liệu',N'H3-302',NULL,N'Sinh viên muốn ôn lại stack',75),
+(4,1,3,'2025-10-26 14:00',90,N'Trực Tuyến',N'Công nghệ phần mềm',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viên muốn ôn lại thuật toán sắp xếp',30),
+(4,1,2,'2025-10-26 14:00',90,N'Trực Tuyến',N'Công nghệ phần mềm',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viên muốn ôn lại thuật toán sắp xếp',30),
+(5,1,4,'2025-10-28 14:00',60,N'Trực Tiếp',N'Thuật Toán',N'H6-507',NULL,N'Sinh viên muốn ôn lại thuật toán sắp xếp',80),
+(6,1,5,'2025-10-28 16:00',60,N'Trực Tiếp',N'Thuật Toán',N'H6-507',NULL ,N'Buổi học đầu tiên - Giới thiệu',0),
+(7,1,5,'2025-10-29 15:00',90,N'Trực Tuyến',N'Công nghệ phần mềm','H6-307',NULL,N'Cấu Trúc Dữ Liệu cây',60)
 GO
 
 INSERT INTO feedback (studentId, tutorId, rating, an_danh, comments) VALUES
-(1, 1, 4.5, 0, N'Th?y r?t kiên nh?n và gi?i thích rõ ràng.'),
-(2, 0, 4.0, 1, N'Bài h?c h?u ích, c?n nhi?u ví d? h?n.');
+(1, 1, 4.5, 0, N'Thầy rất kiên nhẫn và giải thích rõ ràng.'),
+(2, 0, 4.0, 1, N'Bài học hữu ích và cần nhiều ví dụ hơn.');
 GO
 
 INSERT INTO library_source (resourceId, title, category, urls, descriptions, uploadedBy, uploadedAt) VALUES
-(201, N'Data Structures and Algorithms - Complete Guide', N'C?u Trúc D? Li?u & Thu?t Toán', N'drive.google.com/1234', N'Comprehensive guide covering all fundamental data structures including arrays, linked lists, trees, graphs, and hash tables.', 5, '2025-10-15 10:00:00'), 
-(202, N'Sorting Algorithms Explained', N'Thu?t Toán', N'youtube.com/pronounce', N'Video lecture series explaining bubble sort, quick sort, merge sort, and heap sort with visualizations.', 2, '2025-10-20 14:30:00'),
-(203, N'SQL Database Design Patterns', N'Công ngh? ph?n m?m', N'drive.google.com/1234', N'Best practices and design patterns for relational database design, normalization, and optimization.', 5, '2025-10-18 10:00:00'), 
+(201, N'Data Structures and Algorithms - Complete Guide', N'Cấu Trúc Dữ Liệu & Thuật Toán', N'drive.google.com/1234', N'Comprehensive guide covering all fundamental data structures including arrays, linked lists, trees, graphs, and hash tables.', 5, '2025-10-15 10:00:00'), 
+(202, N'Sorting Algorithms Explained', N'Thuật Toán', N'youtube.com/pronounce', N'Video lecture series explaining bubble sort, quick sort, merge sort, and heap sort with visualizations.', 2, '2025-10-20 14:30:00'),
+(203, N'SQL Database Design Patterns', N'Công nghệ phần mềm', N'drive.google.com/1234', N'Best practices and design patterns for relational database design, normalization, and optimization.', 5, '2025-10-18 10:00:00'), 
 (204, N'Machine Learning Fundamentals', N'H?c Máy', N'youtube.com/pronounce', N'Introduction to supervised and unsupervised learning, neural networks, and deep learning basics.', 2, '2025-10-10 14:30:00'),
-(205, N'Practice Problems - Data Structures', N'C?u Trúc D? Li?u', N'drive.google.com/1234', N'Collection of 100+ practice problems with solutions for mastering data structures.', 5, '2025-10-22 10:00:00'), 
-(206, N'Software Design Principles', N'Công ngh? ph?n m?m', N'youtube.com/pronounce', N'SOLID principles, design patterns, and clean code practices for software development.', 2, '2025-12-10 14:30:00'),
-(207, N'Graph Algorithms Workshop Recording', N'C?u Trúc D? Li?u', N'drive.google.com/1234', N'Complete workshop on graph traversal, shortest path algorithms, and minimum spanning trees.', 5, '2025-10-25 10:00:00'), 
-(208, N'Python Programming Cheat Sheet', N'Công ngh? ph?n m?m', N'youtube.com/pronounce', N'Quick reference guide for Python syntax, built-in functions, and common libraries.', 2, '2025-08-10 14:30:00')
+(205, N'Practice Problems - Data Structures', N'Cấu Trúc Dữ Liệu', N'drive.google.com/1234', N'Collection of 100+ practice problems with solutions for mastering data structures.', 5, '2025-10-22 10:00:00'), 
+(206, N'Software Design Principles', N'Công nghệ phần mềm', N'youtube.com/pronounce', N'SOLID principles, design patterns, and clean code practices for software development.', 2, '2025-12-10 14:30:00'),
+(207, N'Graph Algorithms Workshop Recording', N'Cấu Trúc Dữ Liệu', N'drive.google.com/1234', N'Complete workshop on graph traversal, shortest path algorithms, and minimum spanning trees.', 5, '2025-10-25 10:00:00'), 
+(208, N'Python Programming Cheat Sheet', N'Công nghệ phần mềm', N'youtube.com/pronounce', N'Quick reference guide for Python syntax, built-in functions, and common libraries.', 2, '2025-08-10 14:30:00')
 
+GO
+
+USE CNPM
+GO
+CREATE LOGIN localhost WITH PASSWORD = N'12345678', CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+GO
+
+-- 2. Tạo User và gán quyền (Database level)
+USE CNPM -- Thay tên DB của bạn vào đây
+GO
+CREATE USER localhost FOR LOGIN localhost
+GO
+ALTER ROLE [db_owner] ADD MEMBER localhost
 GO
