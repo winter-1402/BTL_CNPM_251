@@ -1,7 +1,8 @@
 // ============================================
 // routes/feedback.js - Complete Feedback Routes
 // ============================================
-
+const express = require("express");
+const { authenticate, authorize } = require("../middleware/auth");
 const feedbackRouter = express.Router();
 const { FeedbackService } = require("../services/FeedbackService");
 

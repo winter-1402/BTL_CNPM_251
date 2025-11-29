@@ -1,7 +1,8 @@
 // ============================================
 // routes/reports.js - Complete Report Routes
 // ============================================
-
+const express = require("express");
+const { authenticate, authorize } = require("../middleware/auth");
 const reportRouter = express.Router();
 const { ReportService } = require("../services/ReportService");
 

@@ -1,10 +1,6 @@
 // ============================================
 // app.js - Main Application with All Routes
 // ============================================
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "../context/AuthContext";
-import Login from "./pages/Login";
-
 const express = require("express");
 const cors = require("cors");
 const { db } = require("./config/database");
@@ -108,18 +104,3 @@ async function startServer() {
 startServer();
 
 module.exports = app;
-
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          {/* Your other routes */}
-        </Routes>
-      </Router>
-    </AuthProvider>
-  );
-}
-
-export default App;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dashboard } from "./components/Dashboard";
 import { TutorDirectory } from "./components/TutorDirectory";
 import { SessionManagement } from "./components/SessionManagement";
@@ -13,6 +13,7 @@ import { LoginPage } from "./components/LoginPage";
 import { Homepage } from "./components/Homepage";
 import { Toaster } from "./components/ui/sonner";
 import logoImage from "./assets/LogoBK.png";
+import { AuthProvider, useAuth } from "./AuthContext";
 
 export type UserRole = "student" | "tutor" | "coordinator" | "admin";
 
@@ -59,60 +60,20 @@ export type Tutor = {
   bio?: string;
 };
 
-function App() {
+function AppContent() {
+  const { user, isAuthenticated, loading, login, logout } = useAuth();
   const [showHomepage, setShowHomepage] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [currentView, setCurrentView] = useState<string>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // User data based on role
-  const getUserData = (email: string, role: UserRole): User => {
-    const userData: Record<string, User> = {
-      "an.nguyen@hcmut.edu.vn": {
-        id: "1810123",
-        name: "Nguyen Van An",
-        email: "an.nguyen@hcmut.edu.vn",
-        role: "student",
-        studentId: "1810123",
-        faculty: "Computer Science",
-        major: "Software Engineering",
-      },
-      "minh.tran@hcmut.edu.vn": {
-        id: "T001",
-        name: "Dr. Tran Van Minh",
-        email: "minh.tran@hcmut.edu.vn",
-        role: "tutor",
-        faculty: "Computer Science",
-      },
-      "admin@hcmut.edu.vn": {
-        id: "A001",
-        name: "System Administrator",
-        email: "admin@hcmut.edu.vn",
-        role: "admin",
-        faculty: "Administration",
-      },
-    };
-
-    return (
-      userData[email] || {
-        id: "1",
-        name: "User",
-        email: email,
-        role: role,
-      }
-    );
+  // Handle login with API
+  const handleLogin = async (email: string, role: UserRole) => {
+    // For demo, use mock passwords
+    setShowHomepage(false);
   };
 
-  const handleLogin = (email: string, role: UserRole) => {
-    const user = getUserData(email, role);
-    setCurrentUser(user);
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    await logout();
     setCurrentView("dashboard");
     setShowHomepage(true);
   };
@@ -122,37 +83,43 @@ function App() {
   };
 
   const renderContent = () => {
-    if (!currentUser) return null;
+    if (!user) return null;
 
     switch (currentView) {
       case "dashboard":
-        return <Dashboard user={currentUser} />;
+        return <Dashboard user={user} />;
       case "tutors":
-        return <TutorDirectory user={currentUser} />;
+        return <TutorDirectory user={user} />;
       case "sessions":
-        return <SessionManagement user={currentUser} />;
+        return <SessionManagement user={user} />;
       case "feedback":
-        return <Feedback user={currentUser} />;
+        return <Feedback user={user} />;
       case "availability":
-        return <TutorAvailability user={currentUser} />;
+        return <TutorAvailability user={user} />;
       case "library":
-        return <Library user={currentUser} />;
+        return <Library user={user} />;
       case "reports":
-        return <Reports user={currentUser} />;
+        return <Reports user={user} />;
       case "profile":
-        return <Profile user={currentUser} />;
+        return <Profile user={user} />;
       default:
-        return <Dashboard user={currentUser} />;
+        return <Dashboard user={user} />;
     }
   };
 
-  // Show homepage first
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
   if (showHomepage) {
     return <Homepage onNavigateToLogin={handleNavigateToLogin} />;
   }
 
-  // Show login page if not authenticated
-  if (!isAuthenticated || !currentUser) {
+  if (!isAuthenticated || !user) {
     return <LoginPage onLogin={handleLogin} />;
   }
 
@@ -161,7 +128,7 @@ function App() {
       <Sidebar
         currentView={currentView}
         setCurrentView={setCurrentView}
-        user={currentUser}
+        user={user}
         isOpen={sidebarOpen}
         setIsOpen={setSidebarOpen}
         logoImage={logoImage}
@@ -169,7 +136,7 @@ function App() {
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
-          user={currentUser}
+          user={user}
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={handleLogout}
         />
@@ -177,6 +144,14 @@ function App() {
       </div>
       <Toaster />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

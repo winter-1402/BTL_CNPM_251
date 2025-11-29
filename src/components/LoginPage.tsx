@@ -7,8 +7,11 @@ import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import logoImage from "../assets/LogoBK.png";
+import { useAuth } from "../AuthContext"; // Import useAuth hook
 
 type LoginPageProps = {
+  // Cập nhật: onLogin bây giờ chủ yếu dùng để trigger chuyển view trong App.tsx
+  // sau khi AuthContext đã cập nhật state user.
   onLogin: (
     email: string,
     role: "student" | "tutor" | "coordinator" | "admin"
@@ -16,16 +19,18 @@ type LoginPageProps = {
 };
 
 export function LoginPage({ onLogin }: LoginPageProps) {
+  const { login } = useAuth(); // Lấy hàm login từ Context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Example accounts
-  const accounts = {
+  // Dữ liệu mẫu chỉ dùng để điền nhanh form (Quick Fill)
+  // Mật khẩu ở đây cần khớp với database backend của bạn
+  const demoAccounts = {
     student: {
       email: "an.nguyen@hcmut.edu.vn",
-      password: "student123",
+      password: "student123", // Đảm bảo password này đúng với DB
       role: "student" as const,
     },
     tutor: {
@@ -40,31 +45,55 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     },
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Simulate authentication delay
-    setTimeout(() => {
-      // Check credentials
-      const account = Object.values(accounts).find(
-        (acc) => acc.email === email && acc.password === password
-      );
+    try {
+      // Gọi API Login thông qua AuthContext
+      const result = await login(email, password);
 
-      if (account) {
-        onLogin(email, account.role);
+      if (result.success) {
+        // Nếu thành công, AuthContext đã lưu user.
+        // Ta gọi onLogin để App.tsx biết và ẩn Homepage/chuyển view.
+        // Lưu ý: Cần lấy role thực tế từ user trong context,
+        // nhưng ở đây ta có thể lấy tạm từ demoAccounts hoặc để App tự xử lý user hiện tại.
+        // Để tương thích với prop onLogin cũ, ta truyền email và role (nếu có).
+
+        // Trong thực tế, App.tsx nên check user từ context,
+        // nhưng ta vẫn gọi callback này để giữ luồng UI cũ.
+
+        // Cố gắng xác định role từ danh sách demo hoặc mặc định là student để UI chuyển hướng đúng
+        let detectedRole: "student" | "tutor" | "coordinator" | "admin" =
+          "student";
+
+        // Logic phụ để đoán role nếu API không trả về trực tiếp ở đây (tùy implementation của login hook)
+        // Tuy nhiên, AuthContext của bạn update user state async.
+        // Cách an toàn nhất là gọi onLogin, và App.tsx sẽ render lại dựa trên isAuthenticated.
+
+        // Giả lập lấy role từ input email để khớp logic cũ (nếu cần)
+        if (email.includes("admin")) detectedRole = "admin";
+        else if (email.includes("tutor") || email.includes("minh"))
+          detectedRole = "tutor";
+
+        onLogin(email, detectedRole);
       } else {
+        // Hiển thị lỗi từ API
         setError(
-          "Email hoặc mật khẩu không đúng. Vui lòng thử lại hoặc sử dụng một trong các tài khoản mẫu bên dưới."
+          result.error ||
+            "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu."
         );
       }
+    } catch (err) {
+      setError("Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   const handleQuickLogin = (accountType: "student" | "tutor" | "admin") => {
-    const account = accounts[accountType];
+    const account = demoAccounts[accountType];
     setEmail(account.email);
     setPassword(account.password);
     setError("");
@@ -142,10 +171,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             </div>
           </form>
 
-          {/* Example Accounts */}
+          {/* Demo Accounts Section */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-600 mb-4 text-center">
-              Tài khoản Demo - Nhấn để sử dụng:
+              Tài khoản Demo (Nhấn để điền form):
             </p>
 
             <Tabs defaultValue="student" className="w-full">
@@ -169,11 +198,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {accounts.student.email}
+                      {demoAccounts.student.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {accounts.student.password}
+                      {demoAccounts.student.password}
                     </div>
                   </div>
                   <Button
@@ -182,7 +211,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     size="sm"
                     className="w-full mt-2"
                   >
-                    Dùng TK Sinh viên
+                    Điền TK Sinh viên
                   </Button>
                 </div>
               </TabsContent>
@@ -203,11 +232,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {accounts.tutor.email}
+                      {demoAccounts.tutor.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {accounts.tutor.password}
+                      {demoAccounts.tutor.password}
                     </div>
                   </div>
                   <Button
@@ -216,7 +245,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     size="sm"
                     className="w-full mt-2"
                   >
-                    Dùng TK Giảng viên
+                    Điền TK Giảng viên
                   </Button>
                 </div>
               </TabsContent>
@@ -237,11 +266,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {accounts.admin.email}
+                      {demoAccounts.admin.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {accounts.admin.password}
+                      {demoAccounts.admin.password}
                     </div>
                   </div>
                   <Button
@@ -250,7 +279,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     size="sm"
                     className="w-full mt-2"
                   >
-                    Dùng TK Quản trị
+                    Điền TK Quản trị
                   </Button>
                 </div>
               </TabsContent>

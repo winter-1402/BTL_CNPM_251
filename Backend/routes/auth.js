@@ -1,7 +1,6 @@
 // ============================================
 // routes/auth.js - Complete Authentication Routes
 // ============================================
-
 const express = require("express");
 const { AuthenticationService } = require("../services/AuthenticationService");
 const { authenticate } = require("../middleware/auth");
