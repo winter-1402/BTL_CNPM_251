@@ -10,4 +10,9 @@
   Run `npm run dev` to start the development server.
 
   init code
-  
+
+  Download SQL2022-SSEI-Expr , install it 
+
+  change the tcp of the server to 1433
+
+  run the sql script in the back end folder
