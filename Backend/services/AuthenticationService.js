@@ -4,28 +4,32 @@
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { db } = require("../config/database");
+const { mssqlDb } = require("../config/database");
 
 class AuthenticationService {
   static async authenticateUser(email, password) {
     try {
       // First, try local authentication
-      const users = await db.queryData("users", { email });
-
+      const users = await mssqlDb.query("SELECT * FROM users WHERE email = ?", [email]);
       if (users.length === 0) {
         // If user not found locally, try HCMUT_SSO
         return await this.authenticateWithHCMUT_SSO(email, password);
       }
 
-      const user = users[0];
-      const isValid = await bcrypt.compare(password, user.password_hash);
-
+      const user = users.map(user => user.passwords);;
+      const isValid = password === user ? 0 :1;
+      const user_id = users.map(user_id => user_id.id);
+      const user_name = users.map(user_name => user_name.username);
+      const user_email = users.map(user_email => user_email.email);
+      const user_role = users.map(user_role => user_role.roles);
       if (!isValid) return null;
-
       // Remove password hash from returned object
-      delete user.password_hash;
-
-      return user;
+      return  {
+          id: user_id,
+          name: user_name,
+          email: user_email,
+          role: user_role,
+        };
     } catch (error) {
       console.error("Authentication error:", error);
       throw error;
@@ -50,45 +54,12 @@ class AuthenticationService {
     }
   }
 
-  static validateToken(token) {
-    try {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "tutor-system-secret-key"
-      );
-      return decoded;
-    } catch (error) {
-      console.error("Token validation error:", error);
-      return null;
-    }
-  }
 
   static async login(email, password) {
     try {
       const user = await this.authenticateUser(email, password);
-
       if (!user) return null;
-
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-        },
-        process.env.JWT_SECRET || "tutor-system-secret-key",
-        { expiresIn: "24h" }
-      );
-
-      // Store session
-      await db.storeData("sessions", {
-        user_id: user.id,
-        token: token,
-        created_at: new Date(),
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      });
-
       return {
-        token,
         user: {
           id: user.id,
           name: user.name,

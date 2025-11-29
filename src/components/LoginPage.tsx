@@ -1,3 +1,6 @@
+// ============================================
+// src/components/LoginPage.tsx - FIXED VERSION
+// ============================================
 import { useState } from "react";
 import { LogIn, User, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -7,30 +10,27 @@ import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import logoImage from "../assets/LogoBK.png";
-import { useAuth } from "../AuthContext"; // Import useAuth hook
+import { useAuth } from "../AuthContext"; // IMPORTANT: Import useAuth
+import { UserRole } from "../App";
 
 type LoginPageProps = {
-  // Cập nhật: onLogin bây giờ chủ yếu dùng để trigger chuyển view trong App.tsx
-  // sau khi AuthContext đã cập nhật state user.
-  onLogin: (
-    email: string,
-    role: "student" | "tutor" | "coordinator" | "admin"
-  ) => void;
+  onLogin: (email: string, role: UserRole) => void;
 };
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const { login } = useAuth(); // Lấy hàm login từ Context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Use the auth context
+  const { login } = useAuth();
 
-  // Dữ liệu mẫu chỉ dùng để điền nhanh form (Quick Fill)
-  // Mật khẩu ở đây cần khớp với database backend của bạn
-  const demoAccounts = {
+  // Example accounts
+  const accounts = {
     student: {
       email: "an.nguyen@hcmut.edu.vn",
-      password: "student123", // Đảm bảo password này đúng với DB
+      password: "student123",
       role: "student" as const,
     },
     tutor: {
@@ -51,55 +51,54 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     setLoading(true);
 
     try {
-      // Gọi API Login thông qua AuthContext
+      // Use API login from AuthContext
       const result = await login(email, password);
 
       if (result.success) {
-        // Nếu thành công, AuthContext đã lưu user.
-        // Ta gọi onLogin để App.tsx biết và ẩn Homepage/chuyển view.
-        // Lưu ý: Cần lấy role thực tế từ user trong context,
-        // nhưng ở đây ta có thể lấy tạm từ demoAccounts hoặc để App tự xử lý user hiện tại.
-        // Để tương thích với prop onLogin cũ, ta truyền email và role (nếu có).
-
-        // Trong thực tế, App.tsx nên check user từ context,
-        // nhưng ta vẫn gọi callback này để giữ luồng UI cũ.
-
-        // Cố gắng xác định role từ danh sách demo hoặc mặc định là student để UI chuyển hướng đúng
-        let detectedRole: "student" | "tutor" | "coordinator" | "admin" =
-          "student";
-
-        // Logic phụ để đoán role nếu API không trả về trực tiếp ở đây (tùy implementation của login hook)
-        // Tuy nhiên, AuthContext của bạn update user state async.
-        // Cách an toàn nhất là gọi onLogin, và App.tsx sẽ render lại dựa trên isAuthenticated.
-
-        // Giả lập lấy role từ input email để khớp logic cũ (nếu cần)
-        if (email.includes("admin")) detectedRole = "admin";
-        else if (email.includes("tutor") || email.includes("minh"))
-          detectedRole = "tutor";
-
-        onLogin(email, detectedRole);
-      } else {
-        // Hiển thị lỗi từ API
-        setError(
-          result.error ||
-            "Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu."
+        // Find the role from accounts
+        const account = Object.values(accounts).find(
+          (acc) => acc.email === email
         );
+        
+        if (account) {
+          onLogin(email, account.role); // Call the parent onLogin
+        }
+      } else {
+        setError(result.error || "Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
       }
-    } catch (err) {
-      setError("Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.");
+    } catch (err: any) {
+      setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.");
+      console.error("Login error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickLogin = (accountType: "student" | "tutor" | "admin") => {
-    const account = demoAccounts[accountType];
+  const handleQuickLogin = async (accountType: "student" | "tutor" | "admin") => {
+    const account = accounts[accountType];
     setEmail(account.email);
     setPassword(account.password);
     setError("");
-  };
+    
+    // Auto-login after setting credentials
+    setLoading(true);
+    
+    try {
+      const result = await login(account.email, account.password);
 
-  return (
+      if (result.success) {
+        onLogin(account.email, account.role);
+      } else {
+        setError(result.error || "Đăng nhập thất bại");
+      }
+    } catch (err) {
+      setError("Đã xảy ra lỗi khi đăng nhập");
+      console.error("Quick login error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+return (
     <div className="min-h-screen bg-gradient-to-br from-[#030391] via-[#1488D8] to-[#030391] flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center space-y-2">
@@ -171,14 +170,14 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             </div>
           </form>
 
-          {/* Demo Accounts Section */}
+          {/* Example Accounts */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-600 mb-4 text-center">
-              Tài khoản Demo (Nhấn để điền form):
+              Tài khoản Demo - Nhấn để sử dụng:
             </p>
 
             <Tabs defaultValue="student" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+<TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="student">Sinh viên</TabsTrigger>
                 <TabsTrigger value="tutor">Giảng viên</TabsTrigger>
                 <TabsTrigger value="admin">Quản trị</TabsTrigger>
@@ -198,11 +197,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {demoAccounts.student.email}
+                      {accounts.student.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {demoAccounts.student.password}
+                      {accounts.student.password}
                     </div>
                   </div>
                   <Button
@@ -210,8 +209,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     variant="outline"
                     size="sm"
                     className="w-full mt-2"
+                    disabled={loading}
                   >
-                    Điền TK Sinh viên
+                    {loading ? "Đang đăng nhập..." : "Dùng TK Sinh viên"}
                   </Button>
                 </div>
               </TabsContent>
@@ -232,20 +232,21 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {demoAccounts.tutor.email}
+                      {accounts.tutor.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {demoAccounts.tutor.password}
+                      {accounts.tutor.password}
                     </div>
                   </div>
                   <Button
                     onClick={() => handleQuickLogin("tutor")}
                     variant="outline"
-                    size="sm"
+size="sm"
                     className="w-full mt-2"
+                    disabled={loading}
                   >
-                    Điền TK Giảng viên
+                    {loading ? "Đang đăng nhập..." : "Dùng TK Giảng viên"}
                   </Button>
                 </div>
               </TabsContent>
@@ -266,11 +267,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <div className="text-xs space-y-1">
                     <div>
                       <span className="text-gray-600">Email:</span>{" "}
-                      {demoAccounts.admin.email}
+                      {accounts.admin.email}
                     </div>
                     <div>
                       <span className="text-gray-600">Mật khẩu:</span>{" "}
-                      {demoAccounts.admin.password}
+                      {accounts.admin.password}
                     </div>
                   </div>
                   <Button
@@ -278,8 +279,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                     variant="outline"
                     size="sm"
                     className="w-full mt-2"
+                    disabled={loading}
                   >
-                    Điền TK Quản trị
+                    {loading ? "Đang đăng nhập..." : "Dùng TK Quản trị"}
                   </Button>
                 </div>
               </TabsContent>

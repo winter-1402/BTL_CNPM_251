@@ -208,7 +208,7 @@ function StudentProfile({ user }: { user: User }) {
               <div className="flex flex-col items-center text-center">
                 <Avatar className="h-32 w-32 mb-4">
                   <AvatarFallback className="bg-[#1488D8] text-white text-3xl">
-                    {profileData.name.split(' ').map((n: string) => n[0]).join('')}
+                    {profileData.name[0].split(' ').map((n: string) => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
                 <h3 className="text-xl text-gray-900 mb-1">{profileData.name}</h3>
@@ -439,7 +439,7 @@ function TutorProfile({ user }: { user: User }) {
                             <div className="flex flex-col items-center text-center">
                                 <Avatar className="h-32 w-32 mb-4">
                                     <AvatarFallback className="bg-[#1488D8] text-white text-3xl">
-                                        {tutorData.name.split(' ').map((n: string) => n[0]).join('')}
+                                        {tutorData.name[0].split(' ').map((n: string) => n[0]).join('')}
                                     </AvatarFallback>
                                 </Avatar>
                                 <h3 className="text-xl text-gray-900 mb-1">{tutorData.name}</h3>

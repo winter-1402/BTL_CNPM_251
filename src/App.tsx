@@ -1,4 +1,8 @@
-import { useState, useEffect } from "react";
+// ============================================
+// src/App.tsx - UPDATED VERSION (Simplified)
+// ============================================
+
+import { useState } from "react";
 import { Dashboard } from "./components/Dashboard";
 import { TutorDirectory } from "./components/TutorDirectory";
 import { SessionManagement } from "./components/SessionManagement";
@@ -61,15 +65,15 @@ export type Tutor = {
 };
 
 function AppContent() {
-  const { user, isAuthenticated, loading, login, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
   const [showHomepage, setShowHomepage] = useState(true);
   const [currentView, setCurrentView] = useState<string>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Handle login with API
-  const handleLogin = async (email: string, role: UserRole) => {
-    // For demo, use mock passwords
-    setShowHomepage(false);
+  // FIXED: Simplified handleLogin - just hide homepage
+  const handleLogin = (email: string, role: UserRole) => {
+    console.log("Login successful for:", email, role);
+    setShowHomepage(false); // This will show the dashboard
   };
 
   const handleLogout = async () => {
@@ -84,7 +88,7 @@ function AppContent() {
 
   const renderContent = () => {
     if (!user) return null;
-
+    
     switch (currentView) {
       case "dashboard":
         return <Dashboard user={user} />;
@@ -97,7 +101,7 @@ function AppContent() {
       case "availability":
         return <TutorAvailability user={user} />;
       case "library":
-        return <Library user={user} />;
+  return <Library user={user} />;
       case "reports":
         return <Reports user={user} />;
       case "profile":
@@ -110,19 +114,25 @@ function AppContent() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Loading...
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#1488D8]"></div>
+          <p className="mt-4 text-gray-600">Đang tải...</p>
+        </div>
       </div>
     );
   }
 
+  // Show homepage first
   if (showHomepage) {
     return <Homepage onNavigateToLogin={handleNavigateToLogin} />;
   }
 
+  // Show login if not authenticated
   if (!isAuthenticated || !user) {
     return <LoginPage onLogin={handleLogin} />;
   }
 
+  // Show dashboard when authenticated
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar

@@ -1,9 +1,10 @@
 // ============================================
 // app.js - Main Application with All Routes
 // ============================================
+
 const express = require("express");
 const cors = require("cors");
-const { db } = require("./config/database");
+const { mssqlDb } = require("./config/database");
 const { NotificationService } = require("./services/NotificationService");
 
 // Import routes
@@ -43,7 +44,10 @@ app.get("/health", (req, res) => {
 });
 
 // Root endpoint
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {  
+        // Gọi hàm để lấy dữ liệu    
+  const emails = "an.nguyen@hcmut.edu.vn";
+  const result = await mssqlDb.query("SELECT * FROM users WHERE email = ?", [emails]);
   res.json({
     message: "Tutor Support System API",
     version: "1.0.0",
@@ -54,6 +58,7 @@ app.get("/", (req, res) => {
       reports: "/api/reports",
       notifications: "/api/notifications",
       health: "/health",
+      results: (result),
     },
   });
 });
@@ -77,7 +82,7 @@ const PORT = process.env.PORT || 8000;
 async function startServer() {
   try {
     // Connect to database
-    await db.connect();
+    await mssqlDb.connect();
 
     // Initialize notification service
     await NotificationService.initialize();
@@ -94,12 +99,14 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log(`Tutor Support System API running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+       
     });
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);
   }
 }
+
 
 startServer();
 
