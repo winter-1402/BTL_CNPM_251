@@ -109,19 +109,19 @@ CREATE TABLE library_source(
 GO
 
 INSERT INTO users(username, email, passwords , roles) VALUES
-(N'Nguy?n V?n An', N'an.nguyen@hcmut.edu.vn', N'student123' , N'student'),
-(N'B˘i Tu?n C??ng', N'cuong.0707@hcmut.edu.vn', N'07072005' , N'student'),
-(N'TS. Tr?n V?n Minh', N'minh.tran@hcmut.edu.vn', N'tutor123' , N'tutor'),
-(N'TS. Hu?nh Duy Ch??ng', N'chuong@hcmut.edu.vn', N'123@a' , N'tutor'),
-(N'Qu?n tr? viÍn H? th?ng', N'admin@hcmut.edu.vn', N' admin123' , N'admin'),
-(N'Ho‡ng V?n Kh·nh', N'khanh.hoang@hcmut.edu.vn', N'07072005' , N'student'),
-(N'Vı Th? Lan', N'lan.vo@hcmut.edu.vn', N'student234' , N'student'),
-(N'LÍ Th? Mai', N'mai.le@hcmut.edu.vn', N'student567' , N'student'),
-(N'Tr?n V?n ??c', N'duc.tran@hcmut.edu.vn', N'student789' , N'student'),
-(N'PhD. Nguy?n Th‡nh Long', N'long.nguyen@hcmut.edu.vn', N'tutor123' , N'tutor'),
-(N'MSC. LÍ Th? Hoa', N'hoa.le@hcmut.edu.vn', N'123@a' , N'tutor'),
-(N'TS. Ho‡ng V?n Kh·nh ', N'khanh.hoang1@hcmut.edu.vn', N'tutor123' , N'tutor'),
-(N'MSC. Ph?m Th? Lan', N'lan@hcmut.edu.vn', N'123@a' , N'tutor')
+(N'Nguy·ªÖn VƒÉn An', N'an.nguyen@hcmut.edu.vn', N'student123' , N'student'),
+(N'B√πi Tu·∫•n C∆∞∆°gng', N'cuong.0707@hcmut.edu.vn', N'07072005' , N'student'),
+(N'TS. Tr·∫ßn VƒÉn Minh', N'minh.tran@hcmut.edu.vn', N'tutor123' , N'tutor'),
+(N'TS. H√πynh Duy Ch∆∞∆°ng', N'chuong@hcmut.edu.vn', N'123@a' , N'tutor'),
+(N'Qu·∫£n tr·ªã vi√™n H·ªá th·ªëng', N'admin@hcmut.edu.vn', N' admin123' , N'admin'),
+(N'Ho√†ng VƒÉn Kh√°nh', N'khanh.hoang@hcmut.edu.vn', N'07072005' , N'student'),
+(N'V√µ Th·ªã Lan', N'lan.vo@hcmut.edu.vn', N'student234' , N'student'),
+(N'L√™ Th·ªã Mai', N'mai.le@hcmut.edu.vn', N'student567' , N'student'),
+(N'Tr·∫ßn VƒÉn ƒê·ª©c', N'duc.tran@hcmut.edu.vn', N'student789' , N'student'),
+(N'PhD. Nguy·ªÖn Th√†nh Long', N'long.nguyen@hcmut.edu.vn', N'tutor123' , N'tutor'),
+(N'MSC. L√™ Th·ªã Hoa', N'hoa.le@hcmut.edu.vn', N'123@a' , N'tutor'),
+(N'TS. Ho√†ng VƒÉn Kh√°nh ', N'khanh.hoang1@hcmut.edu.vn', N'tutor123' , N'tutor'),
+(N'MSC. Ph·∫°m Th·ªã Lan', N'lan@hcmut.edu.vn', N'123@a' , N'tutor')
 GO
  
 INSERT INTO tutors(users_id,tong_hoc_sinh,tong_buoi_thang_nay,rating) VALUES
@@ -144,48 +144,49 @@ INSERT INTO students(users_id,MSSV,tong_buoi_hoc,gio_hoc) VALUES
 GO
 
 INSERT INTO available(tutorId,startTime,endTime)  VALUES
-(0,N'Th? Hai 14:00','16:00'),
-(0,N'Th? T? 10:00','12:00'),
-(0,N'Th? S·u 15:00','17:00'),
-(1,N'Th? Ba 16:00','18:00'),
-(1,N'Th? N?m 9:00','11:00'),
-(1,N'Th? S·u 7:00','9:00')
+(0,N'Th·ª© Hai 14:00','16:00'),
+(0,N'Th·ª© T∆∞ 10:00','12:00'),
+(0,N'Th·ª© S√°u 15:00','17:00'),
+(1,N'Th·ª© Ba 16:00','18:00'),
+(1,N'Th·ª© NƒÉm 9:00','11:00'),
+(1,N'Th·ª© S√°u 7:00','9:00')
 GO
 
 INSERT INTO booked (availability_Id, student_id,  booked_types, topic) VALUES
-(0,2,N'Tr?c Ti?p',N'H?c M·y'),
-(2,4,N'Tr?c tuy?n',N'C?u Tr˙c D? Li?u'),
-(3,3,N'Tr?c tuy?n',N'Thu?t To·n'),
-(4,2,N'Tr?c Ti?p',N'CÙng ngh? ph?n m?m')
+(0,2,N'Tr·ª±c Ti·∫øp',N'H·ªçc M√°y'),
+(2,4,N'Tr·ª±c Tuy·∫øn',N'C·∫•u Tr√∫c D·ªØ Li·ªáu'),
+(3,3,N'Tr·ª±c Tuy·∫øn',N'Thu·∫≠t To√°n'),
+(4,2,N'Tr·ª±c Ti·∫øp',N'C√¥ng ngh·ªá ph·∫ßn m·ªÅm')
 GO
 
 INSERT INTO buoi_hoc(buoi_hoc_Id, tutorId, studentId, thoi_gian, thoi_luong , kieu, topic , dia_diem , duong_link , notes,tien_do) VALUES
-(0,0,1,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u & Thu?t To·n',N'H6-107',NULL,N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',85),
-(0,0,3,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u & Thu?t To·n',N'H6-107',NULL,N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',85),
-(0,0,4,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u & Thu?t To·n',N'H6-107',NULL,N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',85),
-(0,0,5,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u & Thu?t To·n',N'H6-107',NULL,N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',85),
-(1,0,3,'2025-10-28 10:00',60,N'Tr?c tuy?n',N'Thu?t To·n',NULL,N'https://meet.google.com/abc-defg-hij',N'Bu?i h?c ??u tiÍn - gi?i thi?u',0),
-(2,0,3,'2025-10-29 15:00',90,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u',N'H6-307',NULL,N'C?u tr˙c d? li?u c‚y',60),
-(3,1,2,'2025-10-24 14:00',75,N'Tr?c Ti?p',N'C?u Tr˙c D? Li?u',N'H3-302',NULL,N'Sinh viÍn mu?n Ùn l?i stack',75),
-(4,1,3,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'CÙng ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',30),
-(4,1,2,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'CÙng ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',30),
-(5,1,4,'2025-10-28 14:00',60,N'Tr?c Ti?p',N'Thu?t To·n',N'H6-507',NULL,N'Sinh viÍn mu?n Ùn l?i thu?t to·n s?p x?p',80),
-(6,1,5,'2025-10-28 16:00',60,N'Tr?c Ti?p',N'Thu?t To·n',N'H6-507',NULL ,N'Bu?i h?c ??u tiÍn - gi?i thi?u',0),
-(7,1,5,'2025-10-29 15:00',90,N'Tr?c tuy?n',N'CÙng ngh? ph?n m?m','H6-307',NULL,N'C?u tr˙c d? li?u c‚y',60)
+(0,0,1,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u & Thu?t To√°n',N'H6-107',NULL,N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',85),
+(0,0,3,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u & Thu?t To√°n',N'H6-107',NULL,N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',85),
+(0,0,4,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u & Thu?t To√°n',N'H6-107',NULL,N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',85),
+(0,0,5,'2025-10-27 14:00',90,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u & Thu?t To√°n',N'H6-107',NULL,N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',85),
+(1,0,3,'2025-10-28 10:00',60,N'Tr?c tuy?n',N'Thu?t To√°n',NULL,N'https://meet.google.com/abc-defg-hij',N'Bu?i h?c ??u ti√™n - gi?i thi?u',0),
+(2,0,3,'2025-10-29 15:00',90,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u',N'H6-307',NULL,N'C?u tr√∫c d? li?u c√¢y',60),
+(3,1,2,'2025-10-24 14:00',75,N'Tr?c Ti?p',N'C?u Tr√∫c D? Li?u',N'H3-302',NULL,N'Sinh vi√™n mu?n √¥n l?i stack',75),
+(4,1,3,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'C√¥ng ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',30),
+(4,1,2,'2025-10-26 14:00',90,N'Tr?c tuy?n',N'C√¥ng ngh? ph?n m?m',NULL,N'https://meet.google.com/abc-defg-xyz',N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',30),
+(5,1,4,'2025-10-28 14:00',60,N'Tr?c Ti?p',N'Thu?t To√°n',N'H6-507',NULL,N'Sinh vi√™n mu?n √¥n l?i thu?t to√°n s?p x?p',80),
+(6,1,5,'2025-10-28 16:00',60,N'Tr?c Ti?p',N'Thu?t To√°n',N'H6-507',NULL ,N'Bu?i h?c ??u ti√™n - gi?i thi?u',0),
+(7,1,5,'2025-10-29 15:00',90,N'Tr?c tuy?n',N'C√¥ng ngh? ph?n m?m','H6-307',NULL,N'C?u tr√∫c d? li?u c√¢y',60)
 GO
 
 INSERT INTO feedback (studentId, tutorId, rating, an_danh, comments) VALUES
-(1, 1, 4.5, 0, N'Th?y r?t kiÍn nh?n v‡ gi?i thÌch rı r‡ng.'),
-(2, 0, 4.0, 1, N'B‡i h?c h?u Ìch, c?n nhi?u vÌ d? h?n.');
+(1, 1, 4.5, 0, N'Th?y r?t ki√™n nh?n v√† gi?i th√≠ch r√µ r√†ng.'),
+(2, 0, 4.0, 1, N'B√†i h?c h?u √≠ch, c?n nhi?u v√≠ d? h?n.');
 GO
 
 INSERT INTO library_source (resourceId, title, category, urls, descriptions, uploadedBy, uploadedAt) VALUES
-(201, N'Data Structures and Algorithms - Complete Guide', N'C?u Tr˙c D? Li?u & Thu?t To·n', N'drive.google.com/1234', N'Comprehensive guide covering all fundamental data structures including arrays, linked lists, trees, graphs, and hash tables.', 5, '2025-10-15 10:00:00'), 
-(202, N'Sorting Algorithms Explained', N'Thu?t To·n', N'youtube.com/pronounce', N'Video lecture series explaining bubble sort, quick sort, merge sort, and heap sort with visualizations.', 2, '2025-10-20 14:30:00'),
-(203, N'SQL Database Design Patterns', N'CÙng ngh? ph?n m?m', N'drive.google.com/1234', N'Best practices and design patterns for relational database design, normalization, and optimization.', 5, '2025-10-18 10:00:00'), 
-(204, N'Machine Learning Fundamentals', N'H?c M·y', N'youtube.com/pronounce', N'Introduction to supervised and unsupervised learning, neural networks, and deep learning basics.', 2, '2025-10-10 14:30:00'),
-(205, N'Practice Problems - Data Structures', N'C?u Tr˙c D? Li?u', N'drive.google.com/1234', N'Collection of 100+ practice problems with solutions for mastering data structures.', 5, '2025-10-22 10:00:00'), 
-(206, N'Software Design Principles', N'CÙng ngh? ph?n m?m', N'youtube.com/pronounce', N'SOLID principles, design patterns, and clean code practices for software development.', 2, '2025-12-10 14:30:00'),
-(207, N'Graph Algorithms Workshop Recording', N'C?u Tr˙c D? Li?u', N'drive.google.com/1234', N'Complete workshop on graph traversal, shortest path algorithms, and minimum spanning trees.', 5, '2025-10-25 10:00:00'), 
-(208, N'Python Programming Cheat Sheet', N'CÙng ngh? ph?n m?m', N'youtube.com/pronounce', N'Quick reference guide for Python syntax, built-in functions, and common libraries.', 2, '2025-08-10 14:30:00')
+(201, N'Data Structures and Algorithms - Complete Guide', N'C?u Tr√∫c D? Li?u & Thu?t To√°n', N'drive.google.com/1234', N'Comprehensive guide covering all fundamental data structures including arrays, linked lists, trees, graphs, and hash tables.', 5, '2025-10-15 10:00:00'), 
+(202, N'Sorting Algorithms Explained', N'Thu?t To√°n', N'youtube.com/pronounce', N'Video lecture series explaining bubble sort, quick sort, merge sort, and heap sort with visualizations.', 2, '2025-10-20 14:30:00'),
+(203, N'SQL Database Design Patterns', N'C√¥ng ngh? ph?n m?m', N'drive.google.com/1234', N'Best practices and design patterns for relational database design, normalization, and optimization.', 5, '2025-10-18 10:00:00'), 
+(204, N'Machine Learning Fundamentals', N'H?c M√°y', N'youtube.com/pronounce', N'Introduction to supervised and unsupervised learning, neural networks, and deep learning basics.', 2, '2025-10-10 14:30:00'),
+(205, N'Practice Problems - Data Structures', N'C?u Tr√∫c D? Li?u', N'drive.google.com/1234', N'Collection of 100+ practice problems with solutions for mastering data structures.', 5, '2025-10-22 10:00:00'), 
+(206, N'Software Design Principles', N'C√¥ng ngh? ph?n m?m', N'youtube.com/pronounce', N'SOLID principles, design patterns, and clean code practices for software development.', 2, '2025-12-10 14:30:00'),
+(207, N'Graph Algorithms Workshop Recording', N'C?u Tr√∫c D? Li?u', N'drive.google.com/1234', N'Complete workshop on graph traversal, shortest path algorithms, and minimum spanning trees.', 5, '2025-10-25 10:00:00'), 
+(208, N'Python Programming Cheat Sheet', N'C√¥ng ngh? ph?n m?m', N'youtube.com/pronounce', N'Quick reference guide for Python syntax, built-in functions, and common libraries.', 2, '2025-08-10 14:30:00')
+
 GO
