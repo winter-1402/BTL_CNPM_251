@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, Clock, Video, MapPin, Star, MessageSquare, X, CheckCircle } from 'lucide-react';
 import { User, Session } from '../App';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -25,90 +25,40 @@ type SessionManagementProps = {
 export function StudentSessionManagement({ user }: SessionManagementProps) {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
+ const [Session, setSessions] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
+  useEffect(() => {
+  const fetchDashboardData = async () => {
+            try {
+              const response_sessions = await fetch(`http://localhost:8000/api/student/all-sessions?userid=${user.id[0]}`);
+              const data_sessions = await response_sessions.json();
+              setSessions(data_sessions);
+            } catch (error) {
+              console.error('Error fetching dashboard data:', error);
+            }
+            finally {
+                setLoading(false);
+            }
+          }
+     fetchDashboardData();
+      }, []);
 
-  const sessions: Session[] = [
-    {
-      id: '1',
-      tutorId: '1',
-      tutorName: 'Dr. Tran Van Minh',
-      studentId: user.id,
-      studentName: user.name,
-      subject: 'Data Structures & Algorithms',
-      type: 'online',
-      status: 'scheduled',
-      date: '2025-10-27',
-      time: '14:00 - 15:30',
-      duration: 90,
-      meetingLink: 'https://meet.google.com/abc-defg-hij',
-      notes: 'Please review sorting algorithms before the session',
-    },
-    {
-      id: '2',
-      tutorId: '2',
-      tutorName: 'MSc. Le Thi Hoa',
-      studentId: user.id,
-      studentName: user.name,
-      subject: 'Database Systems',
-      type: 'in-person',
-      status: 'scheduled',
-      date: '2025-10-28',
-      time: '10:00 - 11:00',
-      duration: 60,
-      location: 'Building A1, Room 302',
-      notes: 'Bring your laptop with MySQL installed',
-    },
-    {
-      id: '3',
-      tutorId: '3',
-      tutorName: 'PhD. Nguyen Thanh Long',
-      studentId: user.id,
-      studentName: user.name,
-      subject: 'Machine Learning',
-      type: 'online',
-      status: 'completed',
-      date: '2025-10-20',
-      time: '15:00 - 16:30',
-      duration: 90,
-      meetingLink: 'https://meet.google.com/xyz-abcd-efg',
-      rating: 5,
-      feedback: 'Excellent session! Very clear explanations.',
-    },
-    {
-      id: '4',
-      tutorId: '1',
-      tutorName: 'Dr. Tran Van Minh',
-      studentId: user.id,
-      studentName: user.name,
-      subject: 'Algorithms',
-      type: 'online',
-      status: 'completed',
-      date: '2025-10-15',
-      time: '14:00 - 15:00',
-      duration: 60,
-      rating: 5,
-    },
-    {
-      id: '5',
-      tutorId: '6',
-      tutorName: 'Dr. Hoang Van Khanh',
-      studentId: user.id,
-      studentName: user.name,
-      subject: 'Software Engineering',
-      type: 'in-person',
-      status: 'cancelled',
-      date: '2025-10-18',
-      time: '16:00 - 17:30',
-      duration: 90,
-      location: 'Building B4, Room 201',
-    },
-  ];
+const now = new Date('2025-10-28T00:00:00'); // Thời điểm hiện tại
+// Hoặc mốc thời gian cứng nếu bạn đang test: new Date('2025-10-28T00:00:00')
 
-  const upcomingSessions = sessions.filter((s) => s.status === 'scheduled');
-  const completedSessions = sessions.filter((s) => s.status === 'completed');
-  const cancelledSessions = sessions.filter((s) => s.status === 'cancelled');
-   
-  const [upcomingSession, setUpcomingSessions] = useState<Session[]>(upcomingSessions);
+// 1. Lọc và map Sắp tới
+const upcoming = Session
+  .filter(s => new Date(s.thoi_gian) > now && s.cancelled_at === null)
+  .map(s => ({ ...s, status: 'scheduled' })); // Thêm cột status
+// 2. Lọc và map Hoàn thành
+const completed = Session
+  .filter(s => new Date(s.thoi_gian) <= now && s.cancelled_at === null)
+  .map(s => ({ ...s, status: 'completed' })); // Thêm cột status
 
+// 3. Lọc và map Đã hủy
+const cancelled = Session
+  .filter(s => s.cancelled_at !== null)
+  .map(s => ({ ...s, status: 'cancelled' })); // Thêm cột status   
 
   const handleCancelSession = (session: Session) => {
     toast.success(`Đã hủy buổi học với ${session.tutorName} vào ngày ${new Date(session.date).toLocaleDateString('vi-VN')}`, 
@@ -140,8 +90,8 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="text-gray-900 mb-1">{session.subject}</h3>
-              <p className="text-sm text-gray-500">với {session.tutorName}</p>
+              <h3 className="text-gray-900 mb-1">{session.topic}</h3>
+              <p className="text-sm text-gray-500">với {session.tutor_name}</p>
             </div>
             <Badge className={statusColors[session.status]} variant="secondary">
               {statusLabels[session.status]}
@@ -151,7 +101,7 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
           <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4" />
-              <span>{new Date(session.date).toLocaleDateString('vi-VN', { 
+              <span>{new Date(session.thoi_gian).toLocaleDateString('vi-VN', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
@@ -160,17 +110,20 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>{session.time}</span>
+              <span>{new Date(session.thoi_gian).toLocaleTimeString('en-EN', { hour: '2-digit', minute: '2-digit' })} - {new Date(new Date(session.thoi_gian).getTime() + session.thoi_luong * 60000).toLocaleTimeString('en-EN', { hour: '2-digit', minute: '2-digit' })} ( {session.thoi_luong} phút )
+                
+              </span>
             </div>
-            {session.type === 'online' ? (
+            {session.kieu === 'Trực Tuyến' ? (
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Video className="h-4 w-4" />
+                 <span>{session.link}</span>
                 <span>Buổi Học Trực Tuyến</span>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <MapPin className="h-4 w-4" />
-                <span>{session.location}</span>
+                <span>{session.dia_diem}</span>
               </div>
             )}
           </div>
@@ -321,18 +274,18 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
       <Tabs defaultValue="upcoming" className="space-y-6">
         <TabsList>
           <TabsTrigger value="upcoming">
-            Sắp Tới ({upcomingSession.length})
+            Sắp Tới ({upcoming.length})
           </TabsTrigger>
           <TabsTrigger value="completed">
-            Hoàn Thành ({completedSessions.length})
+            Hoàn Thành ({completed.length})
           </TabsTrigger>
           <TabsTrigger value="cancelled">
-            Đã Hủy ({cancelledSessions.length})
+            Đã Hủy ({cancelled.length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming" className="space-y-4">
-          {upcomingSession.length === 0 ? (
+          {upcoming.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
                 <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -341,15 +294,15 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {upcomingSession.map((session) => (
-                <SessionCard key={session.id} session={session} />
+              {upcoming.map((session,index) => (
+                <SessionCard key={index} session={session} />
               ))}
             </div>
           )}
         </TabsContent>
 
         <TabsContent value="completed" className="space-y-4">
-          {completedSessions.length === 0 ? (
+          {completed.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
                 <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -358,15 +311,15 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {completedSessions.map((session) => (
-                <SessionCard key={session.id} session={session} />
+              {completed.map((session,index) => (
+                <SessionCard key={index} session={session} />
               ))}
             </div>
           )}
         </TabsContent>
 
         <TabsContent value="cancelled" className="space-y-4">
-          {cancelledSessions.length === 0 ? (
+          {cancelled.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
                 <X className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -375,8 +328,8 @@ export function StudentSessionManagement({ user }: SessionManagementProps) {
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {cancelledSessions.map((session) => (
-                <SessionCard key={session.id} session={session} />
+              {cancelled.map((session,index) => (
+                <SessionCard key={index} session={session} />
               ))}
             </div>
           )}
