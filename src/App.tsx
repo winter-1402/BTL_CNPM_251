@@ -5,7 +5,8 @@
 import { useState } from "react";
 import { Dashboard } from "./components/Dashboard";
 import { TutorDirectory } from "./components/TutorDirectory";
-import { SessionManagement } from "./components/SessionManagement";
+import { TutorSessionManagement } from "./components/TutorSessionManagement";
+import { StudentSessionManagement } from "./components/StudentSessionManagement";
 import { TutorAvailability } from "./components/TutorAvailability";
 import { Library } from "./components/Library";
 import { Feedback } from "./components/Feedback";
@@ -95,7 +96,12 @@ function AppContent() {
       case "tutors":
         return <TutorDirectory user={user} />;
       case "sessions":
-        return <SessionManagement user={user} />;
+         if (user.role[0] === "tutor") {
+          return <TutorSessionManagement user={user} />;
+        }
+        else {
+        return <StudentSessionManagement user={user} />;
+        }
       case "feedback":
         return <Feedback user={user} />;
       case "availability":

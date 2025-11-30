@@ -12,11 +12,38 @@ import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
 import { TutorDashboard } from "./TutorDashboard";
 import { AdminManagement } from "./AdminManagement";
-
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "./ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "./ui/table";
+import { useState } from "react";
 type DashboardProps = {
   user: User;
 };
-
+type upcomingSession = {
+  id: number;
+  student: string;
+  studentId: string;
+  subject: string;
+  date: string;
+  time: string;
+  type: string;
+  notes: string;
+};
 export function Dashboard({ user }: DashboardProps) {
   // Show tutor-specific dashboard for tutors
   if (user.role[0] === "tutor") {
@@ -83,7 +110,13 @@ export function Dashboard({ user }: DashboardProps) {
     { course: "Học máy", progress: 45, sessions: 5 },
     { course: "Công nghệ phần mềm", progress: 85, sessions: 10 },
   ];
-
+  const [sessionPage, setSessionPage] = useState(1);
+  const pageSize = 5;
+  const totalPages = Math.ceil(upcomingSessions.length / pageSize);
+  const pageSessions = upcomingSessions.slice(
+    (sessionPage - 1) * pageSize,
+    sessionPage * pageSize
+  );
   return (
     <div className="p-6 space-y-6">
       {/* Welcome Banner */}
@@ -158,9 +191,83 @@ export function Dashboard({ user }: DashboardProps) {
                 </div>
               </div>
             ))}
-            <Button className="w-full bg-[#1488D8] hover:bg-[#1488D8]/90">
-              Xem tất cả buổi học
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="w-full bg-[#1488D8] hover:bg-[#1488D8]/90">
+                  <span> Xem Tất Cả Buổi Học</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="p-3 overflow-hidden sm:max-w-[1000px] max-h-[600px]">
+                <DialogHeader>
+                  <DialogTitle>Buổi Học Tiếp Theo</DialogTitle>
+                </DialogHeader>
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Gia sư</TableHead>
+                        <TableHead>ID Gia sư</TableHead>
+                        <TableHead>Môn học</TableHead>
+                        <TableHead>Ngày</TableHead>
+                        <TableHead>Giờ</TableHead>
+                        <TableHead>Hình thức</TableHead>
+                        <TableHead>Ghi chú</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {pageSessions.map((session) => (
+                        <TableRow key={session.id}>
+                          <TableCell className="font-medium">
+                            {session.tutor}
+                          </TableCell>
+                          <TableCell>{session.id}</TableCell>
+                          <TableCell>{session.subject}</TableCell>
+                          <TableCell>{session.date}</TableCell>
+                          <TableCell>{session.time}</TableCell>
+                          <TableCell>
+                            <span
+                              className={`text-xs px-2 py-1 rounded ${
+                                session.type === "Trực tuyến"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-blue-100 text-blue-700"
+                              }`}
+                            >
+                              {session.type}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <DialogFooter className="mt-4 flex items-center justify-between gap-2">
+                  <div className="text-sm text-gray-600">
+                    Trang {sessionPage} / {totalPages || 1}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setSessionPage((p) => Math.max(1, p - 1))}
+                      disabled={sessionPage <= 1}
+                    >
+                      Trước
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        setSessionPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={sessionPage >= totalPages}
+                    >
+                      Sau
+                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="default">Đóng</Button>
+                    </DialogClose>
+                  </div>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
 

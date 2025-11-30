@@ -13,6 +13,10 @@ const sessionRouter = require("./routes/sessions");
 const feedbackRouter = require("./routes/feedback");
 const reportRouter = require("./routes/reports");
 const notificationRouter = require("./routes/notifications");
+const tutorRoutes = require('./routes/tutor');
+const libraryRoutes = require('./routes/library');
+// ADDED: Import the new tutor routes
+const tutorRouter = require("./routes/tutors");
 
 const app = express();
 
@@ -33,7 +37,9 @@ app.use("/api/sessions", sessionRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/reports", reportRouter);
 app.use("/api/notifications", notificationRouter);
-
+app.use("/api/tutor", tutorRoutes);
+app.use("/api/library", libraryRoutes);
+app.use("/api/tutors", tutorRouter);
 // Health check
 app.get("/health", (req, res) => {
   res.json({
@@ -46,8 +52,6 @@ app.get("/health", (req, res) => {
 // Root endpoint
 app.get("/", async (req, res) => {  
         // Gọi hàm để lấy dữ liệu    
-  const emails = "an.nguyen@hcmut.edu.vn";
-  const result = await mssqlDb.query("SELECT * FROM users WHERE email = ?", [emails]);
   res.json({
     message: "Tutor Support System API",
     version: "1.0.0",
@@ -57,8 +61,8 @@ app.get("/", async (req, res) => {
       feedback: "/api/feedback",
       reports: "/api/reports",
       notifications: "/api/notifications",
+      library: "/api/library",
       health: "/health",
-      results: (result),
     },
   });
 });
