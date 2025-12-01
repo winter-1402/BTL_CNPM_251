@@ -56,6 +56,7 @@ CREATE TABLE booked(
 GO
 
 CREATE TABLE buoi_hoc (
+  id int Identity(0,1) primary key NOT NULL
   buoi_hoc_Id int NOT NULL,
   tutorId int NOT NULL REFERENCES tutors(id) ,
   studentId int NOT NULL REFERENCES students(id),
@@ -203,3 +204,4 @@ CREATE USER localhost FOR LOGIN localhost
 GO
 ALTER ROLE [db_owner] ADD MEMBER localhost
 GO
+
