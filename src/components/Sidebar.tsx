@@ -20,7 +20,7 @@ export function Sidebar({ currentView, setCurrentView, user, isOpen, setIsOpen, 
     { id: 'feedback', label: 'Đánh giá buổi học', icon: MessageSquare, roles: ['student'] },
     { id: 'availability', label: 'Lịch dạy & Buổi học', icon: Clock, roles: ['tutor'] },
     { id: 'library', label: 'Thư viện tài liệu', icon: BookOpen, roles: ['student', 'tutor'] },
-    { id: 'reports', label: 'Báo cáo & Phân tích', icon: FileText, roles: ['coordinator'] },
+    { id: 'reports', label: 'Báo cáo & Phân tích', icon: FileText, roles: ['tutor','admin'] },
     { id: 'profile', label: 'Hồ sơ cá nhân', icon: User, roles: ['student', 'tutor', 'coordinator'] },
   ];
 
