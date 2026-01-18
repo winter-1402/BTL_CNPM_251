@@ -17,9 +17,11 @@ automatic notifications, reminders.
 
 ## Installation
 We must install the MSSQL servers because the project run in local host
-```bash
-Download the server through this link : https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us
-```
+
+Download the server through this link
+
+[MSSQL server](https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us) 
+
 After settings the server , you should make the server connected by changing the tcp of the server to 1433
 
 Try to run the file server_data.sql in the backend folder to make the server have data
