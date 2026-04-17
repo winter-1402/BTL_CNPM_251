@@ -19,6 +19,13 @@ automatic notifications, reminders.
 We must install the MSSQL servers because the project run in local host
 
 Download the server through this link
+During the installation , you shoild change the name and the password of the sever exactly the same as .env file in the backend folder . Or u can change it like the below : 
+
+MSSQL_USER='localhost'
+MSSQL_PASSWORD='12345678'
+MSSQL_HOST='localhost\BTL_CNPM'
+MSSQL_PORT='1433'
+MSSQL_DB='CNPM'
 
 [MSSQL server](https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us) 
 
@@ -32,7 +39,7 @@ Make the terminal in the front_end folder and then type this command
 npm i init 
 npm run dev
 ```
-## FRONT END
+## BACK END
 ```bash
 Make the terminal in the back_end folder and then type this command
 npm i init 
